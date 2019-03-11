@@ -1,0 +1,21 @@
+{
+  "include": [
+    "./**/*.ts"
+  ],
+  "compilerOptions": {
+    "strict": true,
+    "alwaysStrict": true,
+    "sourceMap": true,
+    "target": "es5",
+    "module": "commonjs",
+    "outDir": "../../build/server",
+    "lib": [
+      "es2018",
+    ],
+    "baseUrl": "../../",
+    "paths": {
+      "@": ["."]
+    },
+    "newLine": "LF"
+  }
+}

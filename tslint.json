@@ -1,0 +1,60 @@
+{
+  "extends": "tslint:recommended",
+  "rules": {
+    "array-type": [
+      true,
+      "array"
+    ],
+    "member-access": true,
+    "no-bitwise": false,
+    "no-empty": true,
+    "curly": [
+      true,
+      "ignore-same-line"
+    ],
+    "arrow-parens": [
+      true,
+      "ban-single-arg-parens"
+    ],
+    "quotemark": [
+      true,
+      "single",
+      "jsx-double",
+      "avoid-escape",
+      "avoid-template"
+    ],
+    "object-literal-sort-keys": false,
+    "ordered-imports": false,
+    "no-shadowed-variable": false,
+    "no-empty-interface": true,
+    "no-parameter-reassignment": true,
+    "no-unnecessary-type-assertion": true,
+    "no-var-keyword": true,
+    "no-unused-variable": true,
+    "no-duplicate-imports": true,
+    "no-duplicate-super": true,
+    "no-angle-bracket-type-assertion": true,
+    "no-duplicate-variable": true,
+    "no-console": true,
+    "no-debugger": true,
+    "no-eval": true,
+    "triple-equals": true,
+    "eofline": true,
+    "indent": [
+      true,
+      "spaces",
+      2
+    ],
+    "linebreak-style": [
+      true,
+      "LF"
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ]
+  }
+}
