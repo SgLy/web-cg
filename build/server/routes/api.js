@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = require("./core");
+var core = require("./core");
 var routes = [
     {
         method: 'get',
@@ -53,7 +53,31 @@ var routes = [
         path: '/api/canvas/1',
         controller: function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                ctx.body = core_1.default();
+                ctx.body = core.madeTemplate();
+                return [2 /*return*/];
+            });
+        }); },
+    },
+    {
+        method: 'post',
+        path: '/api/canvas/update_code',
+        controller: function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                core.updateCode(ctx.request.body.code);
+                ctx.body = { success: 1 };
+                return [2 /*return*/];
+            });
+        }); },
+    },
+    {
+        method: 'get',
+        path: '/api/canvas/get_code',
+        controller: function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                ctx.body = JSON.stringify({
+                    success: 1,
+                    code: core.getCode(),
+                });
                 return [2 /*return*/];
             });
         }); },

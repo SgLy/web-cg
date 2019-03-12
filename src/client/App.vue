@@ -25,7 +25,6 @@
     methods: {},
     mounted() {
       const navHeight = this.$refs.navMenu.$el.clientHeight;
-      console.log(navHeight);
       this.workspaceHeight = `calc(100% - ${navHeight + 3}px)`;
     },
   });

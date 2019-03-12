@@ -1,5 +1,5 @@
 <template>
-  <el-tabs type="border-card" id="workspace" tabPosition="left" :style="{ height: this.height }">
+  <el-tabs type="border-card" id="workspace" tabPosition="left" :style="{ height: this.height }" @tab-click="onTabClick">
     <el-tab-pane label="Code">
       <Editor />
     </el-tab-pane>
@@ -20,6 +20,14 @@
     },
     components: {
       Editor,
+    },
+    methods: {
+      onTabClick(tab) {
+        if (parseInt(tab.index, 10) === 1) {
+          const iframe = document.getElementById('canvas') as HTMLIFrameElement;
+          iframe.src = iframe.src;
+        }
+      },
     },
   });
 </script>

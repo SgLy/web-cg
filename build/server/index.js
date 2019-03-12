@@ -38,11 +38,19 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var Koa = require("koa");
 var Static = require("koa-static");
+var cors = require("koa-cors");
+var bodyParser = require("koa-bodyparser");
 var path = require("path");
 var routes_1 = require("./routes");
 var app = new Koa();
+app.use(bodyParser());
 var clientDir = path.join(__dirname, '..', 'client');
 app.use(Static(clientDir));
+if (process.env.NODE_ENV === 'development') {
+    // tslint:disable-next-line no-console
+    console.warn('Development mode detected, CORS enabled');
+    app.use(cors());
+}
 app.use(function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {

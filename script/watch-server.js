@@ -3,8 +3,8 @@
 const ts = require('typescript');
 const path = require('path');
 const fs = require('fs');
-const rimraf = require('rimraf');
-const copy = require('recursive-copy');
+
+process.env.NODE_ENV = 'development';
 
 /**
  * https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#writing-an-incremental-program-watcher
