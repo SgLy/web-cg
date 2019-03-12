@@ -25,15 +25,16 @@
         value: '',
         language: 'javascript',
         automaticLayout: true,
+        readOnly: true,
       });
-
-      editor.onDidChangeModelContent(e => {
-        this.code = editor.getValue();
-        this.updateCode();
-      });
-
       api.canvas.getCode().then(response => {
         editor.setValue(response.data.code);
+
+        editor.updateOptions({ readOnly: false });
+        editor.onDidChangeModelContent(e => {
+          this.code = editor.getValue();
+          this.updateCode();
+        });
       });
     },
     methods: {
