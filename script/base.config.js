@@ -75,7 +75,7 @@ const baseConfig = {
       watch: true
     }),
     new MonacoWebpackPlugin({
-      languages: ['javascript']
+      languages: ['javascript', 'typescript']
     })
   ]
 };
