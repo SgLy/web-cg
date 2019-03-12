@@ -1,3 +1,8 @@
+# Database username and password
+src/server/database/config.ts
+build/server/database/config.js
+build/server/database/config.js.map
+
 # Logs
 logs
 *.log

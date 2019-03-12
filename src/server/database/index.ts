@@ -1,9 +1,4 @@
 import * as mysql from 'mysql';
+import DATABASE_CONFIG from './config';
 
-export const createConnection = () => mysql.createConnection({
-    host: '',
-    port: 0,
-    user: '',
-    password: '',
-    database: '',
-  });
+export const createConnection = () => mysql.createConnection(DATABASE_CONFIG);
