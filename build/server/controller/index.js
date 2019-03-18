@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -36,45 +47,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var core = require("./core");
-var Controller = require("../controller");
-var routes = [
-    {
-        method: 'get',
-        path: '/api/1',
-        controller: function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                ctx.body = 1;
+var database_1 = require("../database");
+exports.getWork = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var work;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, database_1.default.Work.getWork(ctx.params.id)];
+            case 1:
+                work = _a.sent();
+                ctx.body = JSON.stringify(__assign({ success: 1 }, work));
                 return [2 /*return*/];
-            });
-        }); },
-    },
-    {
-        method: 'get',
-        path: '/api/canvas/1',
-        controller: function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                ctx.body = core.madeTemplate();
-                return [2 /*return*/];
-            });
-        }); },
-    },
-    {
-        method: 'post',
-        path: '/api/canvas/update_code',
-        controller: function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                core.updateCode(ctx.request.body.code);
-                ctx.body = { success: 1 };
-                return [2 /*return*/];
-            });
-        }); },
-    },
-    {
-        method: 'get',
-        path: '/api/work/get_work/:id',
-        controller: Controller.getWork,
-    },
-];
-exports.default = routes;
-//# sourceMappingURL=api.js.map
+        }
+    });
+}); };
+//# sourceMappingURL=index.js.map

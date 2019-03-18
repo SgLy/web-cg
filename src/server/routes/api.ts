@@ -1,6 +1,8 @@
 import { IMiddleware } from 'koa-router';
 import * as core from './core';
 
+import * as Controller from '../controller';
+
 interface IRoute {
   method: 'get' | 'post';
   path: string | RegExp;
@@ -32,13 +34,8 @@ const routes: IRoute[] = [
   },
   {
     method: 'get',
-    path: '/api/canvas/get_code',
-    controller: async (ctx, next) => {
-      ctx.body = JSON.stringify({
-        success: 1,
-        code: core.getCode(),
-      });
-    },
+    path: '/api/work/get_work/:id',
+    controller: Controller.getWork,
   },
 ];
 

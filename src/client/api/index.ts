@@ -5,9 +5,9 @@ export function createApi() {
     baseURL: 'http://localhost:3000/api',
   });
   return {
-    canvas: {
-      getCode: () => conn.get('/canvas/get_code'),
+    work: {
+      getWork: () => conn.get('/work/get_work/1'),
       updateCode: (code: string) => conn.post('/canvas/update_code', { code }),
     },
   };
-};
+}

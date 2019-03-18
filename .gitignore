@@ -3,6 +3,9 @@ src/server/database/config.ts
 build/server/database/config.js
 build/server/database/config.js.map
 
+# Debug data
+src/server/debug_data.sql
+
 # Logs
 logs
 *.log
