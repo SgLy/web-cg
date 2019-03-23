@@ -52,10 +52,50 @@ exports.getWork = function (ctx, next) { return __awaiter(_this, void 0, void 0,
     var work;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, database_1.default.Work.getWork(ctx.params.id)];
+            case 0: return [4 /*yield*/, database_1.default.Work.getWork(ctx.params.workId)];
             case 1:
                 work = _a.sent();
                 ctx.body = JSON.stringify(__assign({ success: 1 }, work));
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.updateCodeContent = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                _a = ctx;
+                _c = (_b = JSON).stringify;
+                return [4 /*yield*/, database_1.default.Work.updateCodeContent(ctx.params.codeId, ctx.request.body.content)];
+            case 1:
+                _a.body = _c.apply(_b, [_d.sent()]);
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.addCode = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var result;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, database_1.default.Work.addCode(ctx.params.workId, ctx.request.body.filename, ctx.request.body.type)];
+            case 1:
+                result = _a.sent();
+                ctx.body = JSON.stringify(result);
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.deleteCode = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                _a = ctx;
+                _c = (_b = JSON).stringify;
+                return [4 /*yield*/, database_1.default.Work.deleteCode(ctx.params.codeId)];
+            case 1:
+                _a.body = _c.apply(_b, [_d.sent()]);
                 return [2 /*return*/];
         }
     });

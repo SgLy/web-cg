@@ -7,7 +7,17 @@ export function createApi() {
   return {
     work: {
       getWork: () => conn.get('/work/get_work/1'),
-      updateCode: (code: string) => conn.post('/canvas/update_code', { code }),
+      updateCode: (codeId: number, content: string) => {
+        return conn.post(`/work/update_code/${codeId}`, { content });
+      },
+      addCode: (workId: number, filename: string, type: string) => {
+        return conn.post(`/work/${workId}/new_code`, {
+          filename, type,
+        });
+      },
+      deleteCode: (codeId: number) => {
+        return conn.post(`/work/delete_code/${codeId}`);
+      },
     },
   };
 }

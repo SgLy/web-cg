@@ -25,18 +25,25 @@ const routes: IRoute[] = [
     },
   },
   {
-    method: 'post',
-    path: '/api/canvas/update_code',
-    controller: async (ctx, next) => {
-      core.updateCode(ctx.request.body.code);
-      ctx.body = { success: 1 };
-    },
-  },
-  {
     method: 'get',
-    path: '/api/work/get_work/:id',
+    path: '/api/work/get_work/:workId',
     controller: Controller.getWork,
   },
+  {
+    method: 'post',
+    path: '/api/work/update_code/:codeId',
+    controller: Controller.updateCodeContent,
+  },
+  {
+    method: 'post',
+    path: '/api/work/:workId/new_code',
+    controller: Controller.addCode,
+  },
+  {
+    method: 'post',
+    path: '/api/work/delete_code/:codeId/',
+    controller: Controller.deleteCode,
+  }
 ];
 
 export default routes;

@@ -57,23 +57,22 @@ export async function cancelPublic(id: number) {
   else return { success: 0 };
 }
 
-export async function newCode(
+export async function addCode(
   workId: number,
   filename: string,
   type: string,
-  content: string,
 ) {
   const result = await query(
-    'INSERT INTO code (work_id, filename, type, content) VALUES (?, ?, ?, ?)',
-    [workId, filename, type, content],
+    'INSERT INTO code (work_id, filename, type, content) VALUES (?, ?, ?, "")',
+    [workId, filename, type],
   );
-  if (result.affectedRows === 1) return { success: 1 };
+  if (result.affectedRows === 1) return { success: 1, codeId: result.insertId };
   else return { success: 0 };
 }
 
 export async function updateCodeContent(codeId: number, content: string) {
   const result = await query(
-    'UPDATE code SET content = ? WHERE code_id = ?',
+    'UPDATE code SET content = ? WHERE id = ?',
     [content, codeId],
   );
   if (result.affectedRows === 1) return { success: 1 };
@@ -82,7 +81,7 @@ export async function updateCodeContent(codeId: number, content: string) {
 
 export async function updateCodeFilename(codeId: number, filename: string) {
   const result = await query(
-    'UPDATE code SET filename = ? WHERE code_id = ?',
+    'UPDATE code SET filename = ? WHERE id = ?',
     [filename, codeId],
   );
   if (result.affectedRows === 1) return { success: 1 };

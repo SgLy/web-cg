@@ -124,16 +124,16 @@ function cancelPublic(id) {
     });
 }
 exports.cancelPublic = cancelPublic;
-function newCode(workId, filename, type, content) {
+function addCode(workId, filename, type) {
     return __awaiter(this, void 0, void 0, function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, index_1.query('INSERT INTO code (work_id, filename, type, content) VALUES (?, ?, ?, ?)', [workId, filename, type, content])];
+                case 0: return [4 /*yield*/, index_1.query('INSERT INTO code (work_id, filename, type, content) VALUES (?, ?, ?, "")', [workId, filename, type])];
                 case 1:
                     result = _a.sent();
                     if (result.affectedRows === 1)
-                        return [2 /*return*/, { success: 1 }];
+                        return [2 /*return*/, { success: 1, codeId: result.insertId }];
                     else
                         return [2 /*return*/, { success: 0 }];
                     return [2 /*return*/];
@@ -141,13 +141,13 @@ function newCode(workId, filename, type, content) {
         });
     });
 }
-exports.newCode = newCode;
+exports.addCode = addCode;
 function updateCodeContent(codeId, content) {
     return __awaiter(this, void 0, void 0, function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, index_1.query('UPDATE code SET content = ? WHERE code_id = ?', [content, codeId])];
+                case 0: return [4 /*yield*/, index_1.query('UPDATE code SET content = ? WHERE id = ?', [content, codeId])];
                 case 1:
                     result = _a.sent();
                     if (result.affectedRows === 1)
@@ -165,7 +165,7 @@ function updateCodeFilename(codeId, filename) {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, index_1.query('UPDATE code SET filename = ? WHERE code_id = ?', [filename, codeId])];
+                case 0: return [4 /*yield*/, index_1.query('UPDATE code SET filename = ? WHERE id = ?', [filename, codeId])];
                 case 1:
                     result = _a.sent();
                     if (result.affectedRows === 1)

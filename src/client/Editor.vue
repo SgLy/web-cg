@@ -1,13 +1,29 @@
 <template>
   <div>
-    <el-tabs v-model="currentFile" editable @edit="onFileChange" >
+    <el-tabs
+      editable
+      :value="currentFile"
+      @edit="onFileChange"
+      @tab-click="onTabClick"
+    >
       <el-tab-pane
-        v-for="item in files"
+        v-for="item in filenames"
         :key="item"
         :label="item"
         :name="item"
       />
     </el-tabs>
+    <NewFileDialog
+      :visible="newFileDialogVisible"
+      @close="onNewFileDialogClose"
+      @newfile="onNewFile"
+    />
+    <DeleteFileDialog
+      :visible="deleteFileDialogVisible"
+      :filename="toDeleteFilename"
+      @close="onDeleteFileDialogClose"
+      @deletefile="onDeleteFile"
+    />
     <div id="editor" />
   </div>
 </template>
@@ -17,61 +33,90 @@
   import * as monaco from 'monaco-editor';
   import {createApi} from './api';
   import utils from './utils';
+  import { mapMutations, mapActions, mapGetters } from 'vuex';
+  import NewFileDialog from './components/NewFileDialog.vue';
+  import DeleteFileDialog from './components/DeleteFileDialog.vue';
 
   const api = createApi();
 
   export default Vue.extend({
     components: {
+      NewFileDialog,
+      DeleteFileDialog,
     },
     data() {
       return {
-        code: '',
-        files: ['index.js', 'vertex.glsl', 'fragment.glsl'],
-        currentFile: 'index.js',
+        newFileDialogVisible: false,
+        deleteFileDialogVisible: false,
+        toDeleteFilename: '',
       };
     },
-    mounted() {
-      const editor = monaco.editor.create(document.getElementById('editor'), {
-        value: '',
-        language: 'javascript',
-        automaticLayout: true,
-        readOnly: true,
+    computed: {
+      ...mapGetters([ 'filenames', 'currentFile' ]),
+    },
+    async mounted() {
+      this.initEditor(document.getElementById('editor'));
+      const editor = this.$store.state.editor;
+      const onEditorChange = utils.debounce(1000, e => {
+        this.editorOnChange({ content: editor.getValue() });
       });
-      api.work.getWork().then(response => {
-        const codes = response.data.codes;
-        this.files = codes.map(c => c.filename);
-        this.currentFile = this.files[0];
-        const models = codes.map(
-          c => monaco.editor.createModel(c.content, c.type),
-        );
-        editor.setModel(models[0]);
-
-        editor.updateOptions({ readOnly: false });
-        editor.onDidChangeModelContent(e => {
-          this.code = editor.getValue();
-          this.updateCode();
-        });
-      });
+      editor.onDidChangeModelContent(onEditorChange);
+      await this.getWork(0);
     },
     methods: {
-      updateCode: utils.throttle(300, function() {
-        api.canvas.updateCode(this.code);
-      }),
+      onTabClick(e) {
+        this.switchCode(this.filenames.indexOf(e.paneName));
+      },
       onFileChange(targetName, action) {
         if (action === 'add') {
-          const n = this.files.length;
-          const newFilename = `${n}.js`;
-          this.files.push(newFilename);
-          this.currentFile = newFilename;
+          this.newFileDialogVisible = true;
         } else if (action === 'remove') {
-          const files = this.files as string[];
-          const indexToDel = files.indexOf(targetName);
-          let currentIndex = files.indexOf(this.currentFile);
-          files.splice(indexToDel, 1);
-          if (currentIndex === files.length) currentIndex = files.length - 1;
-          this.currentFile = this.files[currentIndex];
+          this.toDeleteFilename = targetName;
+          this.deleteFileDialogVisible = true;
         }
       },
+      onNewFileDialogClose() {
+        this.newFileDialogVisible = false;
+      },
+      async onNewFile(newfile) {
+        const res = await this.addCode(newfile);
+        if (res === 1) {
+          this.$notify({
+            title: '新建文件成功',
+            message: `文件 ${newfile.filename} 已创建`,
+            type: 'success',
+          });
+        } else {
+          this.$notify({
+            title: '新建文件失败',
+            message: `文件 ${newfile.filename} 创建失败`,
+            type: 'error',
+          });
+        }
+      },
+      onDeleteFileDialogClose() {
+        this.deleteFileDialogVisible = false;
+      },
+      async onDeleteFile() {
+        const res = await this.deleteCode({
+          filename: this.toDeleteFilename,
+        });
+        if (res === 1) {
+          this.$notify({
+            title: '删除文件成功',
+            message: `文件 ${this.toDeleteFilename} 已被删除`,
+            type: 'success',
+          });
+        } else {
+          this.$notify({
+            title: '删除文件失败',
+            message: `文件 ${this.toDeleteFilename} 删除失败`,
+            type: 'error',
+          });
+        }
+      },
+      ...mapMutations([ 'initEditor', 'switchCode' ]),
+      ...mapActions([ 'getWork', 'editorOnChange', 'addCode', 'deleteCode' ]),
     },
   });
 </script>

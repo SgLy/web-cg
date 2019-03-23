@@ -60,21 +60,25 @@ var routes = [
         }); },
     },
     {
-        method: 'post',
-        path: '/api/canvas/update_code',
-        controller: function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                core.updateCode(ctx.request.body.code);
-                ctx.body = { success: 1 };
-                return [2 /*return*/];
-            });
-        }); },
-    },
-    {
         method: 'get',
-        path: '/api/work/get_work/:id',
+        path: '/api/work/get_work/:workId',
         controller: Controller.getWork,
     },
+    {
+        method: 'post',
+        path: '/api/work/update_code/:codeId',
+        controller: Controller.updateCodeContent,
+    },
+    {
+        method: 'post',
+        path: '/api/work/:workId/new_code',
+        controller: Controller.addCode,
+    },
+    {
+        method: 'post',
+        path: '/api/work/delete_code/:codeId/',
+        controller: Controller.deleteCode,
+    }
 ];
 exports.default = routes;
 //# sourceMappingURL=api.js.map
