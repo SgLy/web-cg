@@ -72,12 +72,10 @@ function restartServer() {
   startServer();
 }
 
-watchMain();
-
 function watchCore() {
-  const src = path.join(__dirname, '..', 'src', 'server', 'routes', 'core');
-  const dest = path.join(__dirname, '..', 'build', 'server', 'routes', 'core');
-  const files = ['template.html', 'test.js'];
+  const src = path.join(__dirname, '..', 'src', 'server', 'controller');
+  const dest = path.join(__dirname, '..', 'build', 'server', 'controller');
+  const files = ['template.html'];
   fs.watch(src, {
     recursive: true
   }, () => {
@@ -88,3 +86,4 @@ function watchCore() {
 }
 
 watchCore();
+watchMain();

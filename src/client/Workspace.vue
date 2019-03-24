@@ -4,7 +4,7 @@
       <Editor />
     </el-tab-pane>
     <el-tab-pane label="Canvas">
-      <iframe id="canvas" src="http://localhost:3000/api/canvas/1"></iframe>
+      <iframe id="canvas" src="http://localhost:3000/api/compiled/1"></iframe>
     </el-tab-pane>
   </el-tabs>
 </template>

@@ -1,5 +1,4 @@
 import { IMiddleware } from 'koa-router';
-import * as core from './core';
 
 import * as Controller from '../controller';
 
@@ -15,13 +14,6 @@ const routes: IRoute[] = [
     path: '/api/1',
     controller: async (ctx, next) => {
       ctx.body = 1;
-    },
-  },
-  {
-    method: 'get',
-    path: '/api/canvas/1',
-    controller: async (ctx, next) => {
-      ctx.body = core.madeTemplate();
     },
   },
   {
@@ -43,7 +35,12 @@ const routes: IRoute[] = [
     method: 'post',
     path: '/api/work/delete_code/:codeId/',
     controller: Controller.deleteCode,
-  }
+  },
+  {
+    method: 'get',
+    path: '/api/compiled/:workId',
+    controller: Controller.compiled,
+  },
 ];
 
 export default routes;

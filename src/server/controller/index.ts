@@ -27,3 +27,5 @@ export const addCode: IMiddleware = async (ctx, next) => {
 export const deleteCode: IMiddleware = async (ctx, next) => {
   ctx.body = JSON.stringify(await DB.Work.deleteCode(ctx.params.codeId));
 };
+
+export { compiled } from './core';

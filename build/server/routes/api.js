@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var core = require("./core");
 var Controller = require("../controller");
 var routes = [
     {
@@ -45,16 +44,6 @@ var routes = [
         controller: function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 ctx.body = 1;
-                return [2 /*return*/];
-            });
-        }); },
-    },
-    {
-        method: 'get',
-        path: '/api/canvas/1',
-        controller: function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                ctx.body = core.madeTemplate();
                 return [2 /*return*/];
             });
         }); },
@@ -78,7 +67,12 @@ var routes = [
         method: 'post',
         path: '/api/work/delete_code/:codeId/',
         controller: Controller.deleteCode,
-    }
+    },
+    {
+        method: 'get',
+        path: '/api/compiled/:workId',
+        controller: Controller.compiled,
+    },
 ];
 exports.default = routes;
 //# sourceMappingURL=api.js.map

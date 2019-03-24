@@ -9,7 +9,7 @@ export async function getWork(id: number) {
     id: works[0].id,
     userId: works[0].user_id,
     public: works[0].public,
-    codes: [] as any[],
+    codes: [] as {id: number, filename: string, content: string, type: string}[],
   };
 
   const codes = await query(

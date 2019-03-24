@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -48,58 +37,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = require("../database");
-exports.getWork = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
-    var work;
+var fs_1 = require("fs");
+var path = require("path");
+var htmlTemplate = fs_1.readFileSync(path.join(__dirname, 'template.html')).toString();
+exports.compiled = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var work, GLSLs, glCode, GLSLcode, loopCode, src;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, database_1.default.Work.getWork(ctx.params.workId)];
             case 1:
                 work = _a.sent();
-                ctx.body = JSON.stringify(__assign({ success: 1 }, work));
+                GLSLs = work.codes.filter(function (c) { return c.type === 'glsl'; });
+                glCode = "\n    const canvas = document.getElementById('canvas');\n    const gl = canvas.getContext('webgl2');\n  ";
+                GLSLcode = "const requireGLSL = (filename) => {\n    " + GLSLs.map(function (c) { return "if (filename === '" + c.filename + "') return `" + c.content + "`;"; })
+                    .join('') + "\n    return '';\n  }";
+                loopCode = "\n    if (!mainLoop) mainLoop = () => {};\n\n    (() => {\n      const loop = () => {\n        mainLoop();\n        window.requestAnimationFrame(loop);\n      }\n      loop();\n    })();\n  ";
+                src = [
+                    glCode,
+                    GLSLcode,
+                    work.codes.find(function (c) { return c.filename === 'index.js'; }).content,
+                    loopCode,
+                ].join('\n');
+                ctx.body = htmlTemplate.replace('{% script %}', src);
                 return [2 /*return*/];
         }
     });
 }); };
-exports.updateCodeContent = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, _b, _c;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
-            case 0:
-                _a = ctx;
-                _c = (_b = JSON).stringify;
-                return [4 /*yield*/, database_1.default.Work.updateCodeContent(ctx.params.codeId, ctx.request.body.content)];
-            case 1:
-                _a.body = _c.apply(_b, [_d.sent()]);
-                return [2 /*return*/];
-        }
-    });
-}); };
-exports.addCode = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
-    var result;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, database_1.default.Work.addCode(ctx.params.workId, ctx.request.body.filename, ctx.request.body.type)];
-            case 1:
-                result = _a.sent();
-                ctx.body = JSON.stringify(result);
-                return [2 /*return*/];
-        }
-    });
-}); };
-exports.deleteCode = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, _b, _c;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
-            case 0:
-                _a = ctx;
-                _c = (_b = JSON).stringify;
-                return [4 /*yield*/, database_1.default.Work.deleteCode(ctx.params.codeId)];
-            case 1:
-                _a.body = _c.apply(_b, [_d.sent()]);
-                return [2 /*return*/];
-        }
-    });
-}); };
-var core_1 = require("./core");
-exports.compiled = core_1.compiled;
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=core.js.map
