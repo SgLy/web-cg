@@ -1,7 +1,6 @@
 import Vuex from 'vuex';
 import { createApi } from '../api';
 import * as monaco from 'monaco-editor';
-import WebGL2Typings from './WebGL2Typing';
 
 const api = createApi();
 
@@ -39,13 +38,6 @@ export default new Vuex.Store({
       state.currentCodeFilename = state.codes[i].filename;
     },
     initEditor(state, element: HTMLElement) {
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        WebGL2Typings, 'WebGL2.d.ts',
-      );
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(`
-        declare const gl: WebGL2RenderingContext;
-        declare const requireGLSL: (filename: string) => string;
-      `, 'webcg.d.ts');
       state.editor = monaco.editor.create(element, {
         value: '',
         language: 'javascript',

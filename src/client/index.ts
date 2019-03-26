@@ -9,6 +9,10 @@ Vue.use(ElementUI);
 
 import store from './store';
 
+import initMonacoEdtior from './monaco';
+
+initMonacoEdtior();
+
 const root = document.createElement('div');
 document.body.appendChild(root);
 
