@@ -67,22 +67,21 @@ function getWork(id) {
     });
 }
 exports.getWork = getWork;
-function newWork(userId) {
+function newWork(name, userId) {
     return __awaiter(this, void 0, void 0, function () {
-        var q, data, result;
+        var result, id, code;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    q = 'INSERT INTO work (user_id) VALUES (?)';
-                    data = [userId];
-                    return [4 /*yield*/, index_1.query('INSERT INTO work (user_id) VALUES (?)', [userId])];
+                case 0: return [4 /*yield*/, index_1.query('INSERT INTO work (user_id, name) VALUES (?, ?)', [userId, name])];
                 case 1:
                     result = _a.sent();
-                    if (result.affectedRows === 1)
-                        return [2 /*return*/, { success: 1, id: result }];
-                    else
+                    if (result.affectedRows !== 1)
                         return [2 /*return*/, { success: 0 }];
-                    return [2 /*return*/];
+                    id = result.insertId;
+                    return [4 /*yield*/, index_1.query('INSERT INTO code (work_id, filename, content, type) VALUES (?, ?, ?, ?)', [id, 'index.js', '', 'javascript'])];
+                case 2:
+                    code = _a.sent();
+                    return [2 /*return*/, { success: 1, id: id }];
             }
         });
     });
@@ -196,4 +195,21 @@ function deleteCode(codeId) {
     });
 }
 exports.deleteCode = deleteCode;
+function getWorkList(userId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, index_1.query('SELECT * FROM work WHERE user_id = ?', [userId])];
+                case 1:
+                    result = _a.sent();
+                    return [2 /*return*/, result.map(function (r) { return ({
+                            name: r.name,
+                            id: r.id,
+                        }); })];
+            }
+        });
+    });
+}
+exports.getWorkList = getWorkList;
 //# sourceMappingURL=work.js.map

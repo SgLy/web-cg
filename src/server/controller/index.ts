@@ -28,4 +28,15 @@ export const deleteCode: IMiddleware = async (ctx, next) => {
   ctx.body = JSON.stringify(await DB.Work.deleteCode(ctx.params.codeId));
 };
 
+export const getWorkList: IMiddleware = async (ctx, next) => {
+  ctx.body = JSON.stringify(await DB.Work.getWorkList(ctx.params.userId));
+};
+
+export const newWork: IMiddleware = async (ctx, next) => {
+  ctx.body = JSON.stringify(await DB.Work.newWork(
+    ctx.request.body.name,
+    ctx.request.body.userId,
+  ));
+};
+
 export { compiled } from './core';

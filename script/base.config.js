@@ -18,6 +18,7 @@ const baseConfig = {
   ],
   output: {
     filename: 'index.[hash].js',
+    publicPath: '/',
     path: path.join(root, 'build', 'client')
   },
   optimization: {

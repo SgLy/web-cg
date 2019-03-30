@@ -6,8 +6,11 @@ const api = createApi();
 
 export default new Vuex.Store({
   state: {
+    userId: 1,
+
     codes: [] as ICode[],
     workId: 0,
+    workList: [] as { name: string, id: number }[],
     currentCodeFilename: '',
     currentCodeIndex: 0,
     currentCodeId: 0,
@@ -15,20 +18,30 @@ export default new Vuex.Store({
     models: [] as monaco.editor.ITextModel[],
   },
   getters: {
+    userId: state => state.userId,
+    workId: state => state.workId,
+    workList: state => state.workList,
     filenames(state) {
       return state.codes.map(c => c.filename);
     },
     currentFile(state) {
       return state.currentCodeFilename;
     },
+    compiledSrc: state => `http://localhost:3000/api/work/${state.workId}/compiled`,
   },
   mutations: {
+    setWorkId(state, workId: number) {
+      state.workId = workId;
+    },
     setWork(state, work: IWork) {
       state.workId = work.id;
       state.codes = work.codes;
       state.models = work.codes. map(
         c => monaco.editor.createModel(c.content, c.type),
       );
+    },
+    setWorkList(state, workList: { name: string, id: number }[]) {
+      state.workList = workList;
     },
     switchCode(state, i: number) {
       if (i < 0 || i >= state.codes.length) return;
@@ -49,10 +62,19 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async getWork({ commit }, { id }: { id: number }) {
-      const res = await api.work.getWork();
+    async getWorkList({ commit }, { userId }: { userId: number }) {
+      const res = await api.work.getWorkList(userId);
+      commit('setWorkList', res.data);
+    },
+    async getWork({ commit }, { workId }: { workId: number }) {
+      commit('setWorkId', workId);
+      const res = await api.work.getWork(workId);
       commit('setWork', res.data);
       commit('switchCode', 0);
+    },
+    async newWork({ commit }, { name, userId }: { name: string, userId: number }) {
+      const res = await api.work.newWork(userId, name);
+      return res.data;
     },
     async editorOnChange({ state, commit, dispatch }, { content }: { content: string }) {
       commit('updateCode', {

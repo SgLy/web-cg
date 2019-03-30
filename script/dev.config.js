@@ -19,6 +19,12 @@ const devConfig = {
   devtool: 'inline-source-map',
   plugins: [new webpack.HotModuleReplacementPlugin()],
   devServer: {
+    historyApiFallback: {
+      index: '/',
+      rewrites: [
+        { from: /^\/.+?$/, to: '/' },
+      ]
+    },
     hot: true,
     inline: true,
     quiet: true,

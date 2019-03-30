@@ -11,35 +11,38 @@ interface IRoute {
 const routes: IRoute[] = [
   {
     method: 'get',
-    path: '/api/1',
-    controller: async (ctx, next) => {
-      ctx.body = 1;
-    },
-  },
-  {
-    method: 'get',
-    path: '/api/work/get_work/:workId',
+    path: '/api/work/:workId',
     controller: Controller.getWork,
   },
   {
+    method: 'get',
+    path: '/api/work/list/:userId',
+    controller: Controller.getWorkList,
+  },
+  {
     method: 'post',
-    path: '/api/work/update_code/:codeId',
+    path: '/api/work/code/:codeId/update',
     controller: Controller.updateCodeContent,
   },
   {
     method: 'post',
-    path: '/api/work/:workId/new_code',
+    path: '/api/work/:workId/code/new',
     controller: Controller.addCode,
   },
   {
     method: 'post',
-    path: '/api/work/delete_code/:codeId/',
+    path: '/api/work/code/:codeId/delete',
     controller: Controller.deleteCode,
   },
   {
     method: 'get',
-    path: '/api/compiled/:workId',
+    path: '/api/work/:workId/compiled',
     controller: Controller.compiled,
+  },
+  {
+    method: 'post',
+    path: '/api/work/new',
+    controller: Controller.newWork,
   },
 ];
 

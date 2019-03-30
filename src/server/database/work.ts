@@ -28,15 +28,18 @@ export async function getWork(id: number) {
   return ret;
 }
 
-export async function newWork(userId: number) {
-  const q = 'INSERT INTO work (user_id) VALUES (?)';
-  const data = [userId];
+export async function newWork(name: string, userId: number) {
   const result = await query(
-    'INSERT INTO work (user_id) VALUES (?)',
-    [userId],
+    'INSERT INTO work (user_id, name) VALUES (?, ?)',
+    [userId, name],
   );
-  if (result.affectedRows === 1) return { success: 1, id: result };
-  else return { success: 0 };
+  if (result.affectedRows !== 1) return { success: 0 };
+  const id = result.insertId;
+  const code = await query(
+    'INSERT INTO code (work_id, filename, content, type) VALUES (?, ?, ?, ?)',
+    [id, 'index.js', '', 'javascript'],
+  );
+  return { success: 1, id };
 }
 
 export async function makePublic(id: number) {
@@ -95,4 +98,15 @@ export async function deleteCode(codeId: number) {
   );
   if (result.affectedRows === 1) return { success: 1 };
   else return { success: 0 };
+}
+
+export async function getWorkList(userId: number) {
+  const result = await query(
+    'SELECT * FROM work WHERE user_id = ?',
+    [userId],
+  );
+  return result.map(r => ({
+    name: r.name,
+    id: r.id,
+  }));
 }

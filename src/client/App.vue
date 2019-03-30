@@ -1,7 +1,7 @@
 <template>
   <div>
     <NavMenu ref="navMenu" />
-    <Workspace :height="workspaceHeight" />
+    <router-view :height="workspaceHeight" />
   </div>
 </template>
 

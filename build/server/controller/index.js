@@ -100,6 +100,34 @@ exports.deleteCode = function (ctx, next) { return __awaiter(_this, void 0, void
         }
     });
 }); };
+exports.getWorkList = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                _a = ctx;
+                _c = (_b = JSON).stringify;
+                return [4 /*yield*/, database_1.default.Work.getWorkList(ctx.params.userId)];
+            case 1:
+                _a.body = _c.apply(_b, [_d.sent()]);
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.newWork = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                _a = ctx;
+                _c = (_b = JSON).stringify;
+                return [4 /*yield*/, database_1.default.Work.newWork(ctx.request.body.name, ctx.request.body.userId)];
+            case 1:
+                _a.body = _c.apply(_b, [_d.sent()]);
+                return [2 /*return*/];
+        }
+    });
+}); };
 var core_1 = require("./core");
 exports.compiled = core_1.compiled;
 //# sourceMappingURL=index.js.map

@@ -6,17 +6,21 @@ export function createApi() {
   });
   return {
     work: {
-      getWork: () => conn.get('/work/get_work/1'),
+      getWork: (workId: number) => conn.get(`/work/${workId}`),
+      getWorkList: (userId: number) => conn.get(`/work/list/${userId}`),
       updateCode: (codeId: number, content: string) => {
-        return conn.post(`/work/update_code/${codeId}`, { content });
+        return conn.post(`/work/code/${codeId}/update`, { content });
       },
       addCode: (workId: number, filename: string, type: string) => {
-        return conn.post(`/work/${workId}/new_code`, {
+        return conn.post(`/work/${workId}/code/new`, {
           filename, type,
         });
       },
       deleteCode: (codeId: number) => {
-        return conn.post(`/work/delete_code/${codeId}`);
+        return conn.post(`/work/code/${codeId}/delete`);
+      },
+      newWork: (userId: number, name: string) => {
+        return conn.post('/work/new', { userId, name });
       },
     },
   };

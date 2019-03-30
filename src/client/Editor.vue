@@ -61,7 +61,6 @@
         this.editorOnChange({ content: editor.getValue() });
       });
       editor.onDidChangeModelContent(onEditorChange);
-      await this.getWork(0);
     },
     methods: {
       onTabClick(e) {
@@ -116,7 +115,7 @@
         }
       },
       ...mapMutations([ 'initEditor', 'switchCode' ]),
-      ...mapActions([ 'getWork', 'editorOnChange', 'addCode', 'deleteCode' ]),
+      ...mapActions([ 'editorOnChange', 'addCode', 'deleteCode' ]),
     },
   });
 </script>

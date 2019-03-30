@@ -52,6 +52,6 @@ interface ICode {
   id: number;
   work_id: number;
   filename: string;
-  content?: string;
+  content: string;
   type: string;
 }

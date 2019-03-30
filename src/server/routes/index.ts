@@ -10,7 +10,7 @@ apiRoutes.forEach(({method, path, controller}) => {
 });
 
 const clientDir = path.join(__dirname, '..', 'client');
-router.get('/', async (ctx, next) => {
+router.get('/*', async (ctx, next) => {
   const data = fs.readFileSync(path.join(clientDir, 'index.html'));
   ctx.response.type = 'html';
   ctx.response.body = data;

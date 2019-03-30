@@ -20,14 +20,14 @@ export const compiled: IMiddleware = async (ctx, next) => {
     return '';
   }`;
   const loopCode = `
-    if (!mainLoop) mainLoop = () => {};
-
     (() => {
       const loop = () => {
-        mainLoop();
+        if (mainLoop) mainLoop();
         window.requestAnimationFrame(loop);
       }
-      loop();
+      try { loop(); } catch (e) {
+        console.error('错误：未定义绘图循环函数 mainLoop');
+      }
     })();
   `;
   const src = [

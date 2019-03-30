@@ -51,7 +51,7 @@ exports.compiled = function (ctx, next) { return __awaiter(_this, void 0, void 0
                 glCode = "\n    const canvas = document.getElementById('canvas');\n    const gl = canvas.getContext('webgl2');\n  ";
                 GLSLcode = "const requireGLSL = (filename) => {\n    " + GLSLs.map(function (c) { return "if (filename === '" + c.filename + "') return `" + c.content + "`;"; })
                     .join('') + "\n    return '';\n  }";
-                loopCode = "\n    if (!mainLoop) mainLoop = () => {};\n\n    (() => {\n      const loop = () => {\n        mainLoop();\n        window.requestAnimationFrame(loop);\n      }\n      loop();\n    })();\n  ";
+                loopCode = "\n    (() => {\n      const loop = () => {\n        if (mainLoop) mainLoop();\n        window.requestAnimationFrame(loop);\n      }\n      try { loop(); } catch (e) {\n        console.error('\u9519\u8BEF\uFF1A\u672A\u5B9A\u4E49\u7ED8\u56FE\u5FAA\u73AF\u51FD\u6570 mainLoop');\n      }\n    })();\n  ";
                 src = [
                     glCode,
                     GLSLcode,

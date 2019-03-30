@@ -46,7 +46,7 @@ api_1.default.forEach(function (_a) {
     router[method](path, controller);
 });
 var clientDir = path.join(__dirname, '..', 'client');
-router.get('/', function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+router.get('/*', function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
     var data;
     return __generator(this, function (_a) {
         data = fs.readFileSync(path.join(clientDir, 'index.html'));
