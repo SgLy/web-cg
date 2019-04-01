@@ -45,7 +45,7 @@ function getWork(id) {
                 case 1:
                     works = _a.sent();
                     if (works.length !== 1)
-                        return [2 /*return*/, { success: 0 }];
+                        return [2 /*return*/];
                     ret = {
                         id: works[0].id,
                         userId: works[0].user_id,

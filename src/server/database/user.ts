@@ -1,5 +1,17 @@
 import { query } from './index';
 
+export async function get(userId: number) {
+  const result = await query(
+    'SELECT * FROM user WHERE id = ?',
+    [userId],
+  );
+  if (result.length !== 1) return { success: 0 };
+  return {
+    success: 1,
+    ...result[0],
+  };
+}
+
 export async function login(phone: string, password: string) {
   const result = await query(
     'SELECT * FROM user WHERE phone = ? AND password = ?',

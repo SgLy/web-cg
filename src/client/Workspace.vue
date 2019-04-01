@@ -43,7 +43,7 @@
       if (workId) {
         await this.getWork({ workId });
       } else {
-        await this.getWorkList({ userId: this.userId });
+        await this.getWorkList();
       }
     },
     methods: {

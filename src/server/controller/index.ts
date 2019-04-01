@@ -13,6 +13,16 @@ export const login: IMiddleware = async (ctx, next) => {
   ctx.body = JSON.stringify(user);
 };
 
+export const me: IMiddleware = async (ctx, next) => {
+  if (ctx.request.body.login) {
+    ctx.body = JSON.stringify(
+      await DB.User.get(ctx.request.body.userId),
+    );
+  } else {
+    ctx.body = JSON.stringify({ success: 0 });
+  }
+};
+
 export const getWork: IMiddleware = async (ctx, next) => {
   const work = await DB.Work.getWork(ctx.params.workId);
   ctx.body = JSON.stringify({
@@ -41,14 +51,24 @@ export const deleteCode: IMiddleware = async (ctx, next) => {
 };
 
 export const getWorkList: IMiddleware = async (ctx, next) => {
-  ctx.body = JSON.stringify(await DB.Work.getWorkList(ctx.params.userId));
+  if (ctx.request.body.login) {
+    ctx.body = JSON.stringify(
+      await DB.Work.getWorkList(ctx.request.body.userId),
+    );
+  } else {
+    ctx.body = JSON.stringify({ success: 0 });
+  }
 };
 
 export const newWork: IMiddleware = async (ctx, next) => {
-  ctx.body = JSON.stringify(await DB.Work.newWork(
-    ctx.request.body.name,
-    ctx.request.body.userId,
-  ));
+  if (ctx.request.body.login) {
+    ctx.body = JSON.stringify(await DB.Work.newWork(
+      ctx.request.body.name,
+      ctx.request.body.userId,
+    ));
+  } else {
+    ctx.body = JSON.stringify({ success: 0 });
+  }
 };
 
 export { compiled } from './core';

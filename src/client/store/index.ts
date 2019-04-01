@@ -31,6 +31,7 @@ export default new Vuex.Store({
   },
   getters: {
     isLogin: state => state.isLogin,
+    userNickname: state => state.user.nickname,
     userId: state => state.user.id,
     workId: state => state.workId,
     workList: state => state.workList,
@@ -47,7 +48,8 @@ export default new Vuex.Store({
       state.isLogin = login;
     },
     setUser(state, user) {
-      state.user = user;
+      const { id, phone, email, student_id, nickname, realname, gender } = user;
+      state.user = { id, phone, email, student_id, nickname, realname, gender };
     },
     setWorkId(state, workId: number) {
       state.workId = workId;
@@ -81,14 +83,26 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async login({ commit }, { phone, password }: { phone: string, password: string }) {
+    async getUserInfo({ commit }) {
+      const res = await api.user.me();
+      if (res.data.success === 1) {
+        commit('setUser', res.data);
+      } else {
+        commit('setLogin', false);
+      }
+      return res.data;
+    },
+    async login({ commit, dispatch }, { phone, password }: { phone: string, password: string }) {
       const res = await api.user.login(phone, password);
-      commit('setLogin', true);
-      commit('setUser', res.data);
+      if (res.data.success === 1) {
+        commit('setLogin', true);
+        commit('setUser', res.data);
+        dispatch('getWorkList');
+      }
       return res;
     },
-    async getWorkList({ commit }, { userId }: { userId: number }) {
-      const res = await api.work.getWorkList(userId);
+    async getWorkList({ commit }) {
+      const res = await api.work.getWorkList();
       commit('setWorkList', res.data);
     },
     async getWork({ commit }, { workId }: { workId: number }) {
@@ -97,8 +111,8 @@ export default new Vuex.Store({
       commit('setWork', res.data);
       commit('switchCode', 0);
     },
-    async newWork({ commit }, { name, userId }: { name: string, userId: number }) {
-      const res = await api.work.newWork(userId, name);
+    async newWork({ commit }, { name }: { name: string }) {
+      const res = await api.work.newWork(name);
       return res.data;
     },
     async editorOnChange({ state, commit, dispatch }, { content }: { content: string }) {

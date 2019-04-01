@@ -8,6 +8,7 @@ export function createApi() {
   });
   return {
     user: {
+      me: () => conn.get('/user/me'),
       login: (phone: string, password: string) => {
         const pwd = crypto.SHA1(password).toString();
         return conn.post('/user/login', {
@@ -17,7 +18,7 @@ export function createApi() {
     },
     work: {
       getWork: (workId: number) => conn.get(`/work/${workId}`),
-      getWorkList: (userId: number) => conn.get(`/work/list/${userId}`),
+      getWorkList: () => conn.get('/work/list'),
       updateCode: (codeId: number, content: string) => {
         return conn.post(`/work/code/${codeId}/update`, { content });
       },
@@ -29,8 +30,8 @@ export function createApi() {
       deleteCode: (codeId: number) => {
         return conn.post(`/work/code/${codeId}/delete`);
       },
-      newWork: (userId: number, name: string) => {
-        return conn.post('/work/new', { userId, name });
+      newWork: (name: string) => {
+        return conn.post('/work/new', { name });
       },
     },
   };

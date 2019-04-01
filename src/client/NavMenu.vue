@@ -13,7 +13,7 @@
         v-model="popoverVisible"
       >
         <UserPopover />
-        <div slot="reference" id="right_item" index="-1">我</div>
+        <div slot="reference" id="right_item" index="-1">{{ isLogin ? userNickname : '登录' }}</div>
       </el-popover>
     </el-menu>
   </div>
@@ -21,6 +21,7 @@
 
 <script lang="ts">
   import Vue from 'vue';
+  import { mapGetters } from 'vuex';
   import UserPopover from './components/UserPopover.vue';
 
   export default Vue.extend({
@@ -32,6 +33,9 @@
         activeIndex: '2',
         popoverVisible: false,
       };
+    },
+    computed: {
+      ...mapGetters([ 'isLogin', 'userNickname' ]),
     },
   });
 </script>

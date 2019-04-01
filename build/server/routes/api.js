@@ -9,13 +9,18 @@ var routes = [
     },
     {
         method: 'get',
-        path: '/api/work/:workId',
-        controller: Controller.getWork,
+        path: '/api/user/me',
+        controller: Controller.me,
     },
     {
         method: 'get',
-        path: '/api/work/list/:userId',
+        path: '/api/work/list',
         controller: Controller.getWorkList,
+    },
+    {
+        method: 'get',
+        path: '/api/work/:workId',
+        controller: Controller.getWork,
     },
     {
         method: 'post',

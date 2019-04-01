@@ -40,6 +40,24 @@
     computed: {
       ...mapGetters([ 'isLogin' ]),
     },
+    async mounted() {
+      if (this.isLogin) {
+        const user = await this.getUserInfo();
+        if (user.success === 1) {
+          this.$notify({
+            title: '浏览器 Cookies 登录成功',
+            message: `欢迎您回来，${user.nickname}`,
+            type: 'success',
+          });
+        } else {
+          this.$notify({
+            title: '浏览器 Cookies 过期',
+            message: '请重新通过右上角用户窗口登录！',
+            type: 'error',
+          });
+        }
+      }
+    },
     methods: {
       onRegister() {},
       async onLogin() {
@@ -56,11 +74,12 @@
         } else {
           this.$notify({
             title: '登录失败',
+            message: '请检查手机号码和密码！',
             type: 'error',
           });
         }
       },
-      ...mapActions([ 'login' ]),
+      ...mapActions([ 'login', 'getUserInfo' ]),
     },
   });
 </script>

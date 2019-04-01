@@ -5,8 +5,9 @@ import * as path from 'path';
 
 const htmlTemplate = readFileSync(path.join(__dirname, 'template.html')).toString();
 
-export const compiled: IMiddleware = async (ctx, next) => {
-  const work = await DB.Work.getWork(ctx.params.workId);
+const getScript = async (workId: number) => {
+  const work = await DB.Work.getWork(workId);
+  if (work === undefined) return '';
   const GLSLs = work.codes.filter(c => c.type === 'glsl');
   const glCode = `
     const canvas = document.getElementById('canvas');
@@ -30,11 +31,15 @@ export const compiled: IMiddleware = async (ctx, next) => {
       }
     })();
   `;
-  const src = [
+  return [
     glCode,
     GLSLcode,
     work.codes.find(c => c.filename === 'index.js')!.content,
     loopCode,
   ].join('\n');
+};
+
+export const compiled: IMiddleware = async (ctx, next) => {
+  const src = await getScript(ctx.params.workId);
   ctx.body = htmlTemplate.replace('{% script %}', src);
 };

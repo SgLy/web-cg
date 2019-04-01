@@ -56,10 +56,7 @@
           });
           return;
         }
-        const res = await this.newWork({
-          name: this.newWorkname,
-          userId: this.userId,
-        });
+        const res = await this.newWork({ name: this.newWorkname });
         if (res.success) {
           this.$notify({
             title: '新建项目成功',

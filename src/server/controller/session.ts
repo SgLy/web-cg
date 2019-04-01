@@ -6,9 +6,13 @@ import * as isUUID from 'is-uuid';
 const session: { [sid: string]: number } = {};
 
 const parseCookie = (ctx: Koa.Context) => {
+  ctx.request.body.login = false;
   const sid = ctx.cookies.get('sid');
   if (!sid || !isUUID.v4(sid)) return;
   if (session[sid] === undefined) return;
+  // tslint:disable-next-line no-console
+  console.log(`[Session] ${session[sid]} (${sid})`);
+  ctx.request.body.login = true;
   ctx.request.body.userId = session[sid];
 };
 

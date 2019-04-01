@@ -43,7 +43,19 @@ var router = new Router();
 var api_1 = require("./api");
 api_1.default.forEach(function (_a) {
     var method = _a.method, path = _a.path, controller = _a.controller;
-    router[method](path, controller);
+    router[method](path, function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    // tslint:disable-next-line no-console
+                    console.log("[Router] " + method.toUpperCase() + " " + path);
+                    return [4 /*yield*/, controller(ctx, next)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });
 var clientDir = path.join(__dirname, '..', 'client');
 router.get('/*', function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
