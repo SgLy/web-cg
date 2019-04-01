@@ -1,5 +1,17 @@
 import DB from '../database';
 import { IMiddleware } from 'koa-router';
+import { assignCookie, setCookie } from './session';
+
+export const login: IMiddleware = async (ctx, next) => {
+  const user = await DB.User.login(
+    ctx.request.body.phone, ctx.request.body.password,
+  );
+  if (user.success === 1) {
+    assignCookie(user.id);
+    setCookie(ctx, user.id);
+  }
+  ctx.body = JSON.stringify(user);
+};
 
 export const getWork: IMiddleware = async (ctx, next) => {
   const work = await DB.Work.getWork(ctx.params.workId);
@@ -40,3 +52,4 @@ export const newWork: IMiddleware = async (ctx, next) => {
 };
 
 export { compiled } from './core';
+export { sessionMiddleware } from './session';

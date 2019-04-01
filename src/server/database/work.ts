@@ -5,6 +5,7 @@ export async function getWork(id: number) {
     'SELECT * FROM work WHERE id = ?',
     [id],
   ) as IWork[];
+  if (works.length !== 1) return { success: 0 };
   const ret = {
     id: works[0].id,
     userId: works[0].user_id,

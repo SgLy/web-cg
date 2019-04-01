@@ -1,7 +1,8 @@
 <template>
   <div>
     <NavMenu ref="navMenu" />
-    <router-view :height="workspaceHeight" />
+    <div v-if="!isLogin" style="padding: 1em;">请先登录！</div>
+    <router-view v-else :height="workspaceHeight" />
   </div>
 </template>
 
@@ -10,12 +11,16 @@
   import axios from 'axios';
   import NavMenu from './NavMenu.vue';
   import Workspace from './Workspace.vue';
+  import { mapGetters } from 'vuex';
 
   export default Vue.extend({
     name: 'App',
     components: {
       NavMenu,
       Workspace,
+    },
+    computed: {
+      ...mapGetters([ 'isLogin' ]),
     },
     data() {
       return {

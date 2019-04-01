@@ -1,12 +1,24 @@
 import Vuex from 'vuex';
+import * as isUUID from 'is-uuid';
 import { createApi } from '../api';
 import * as monaco from 'monaco-editor';
 
 const api = createApi();
 
+const sidExists = () => !!document.cookie.match(/sid=(.+?)($|;)/);
+
 export default new Vuex.Store({
   state: {
-    userId: 1,
+    user: {
+      id: 0,
+      phone: '',
+      email: '',
+      student_id: '',
+      nickname: '',
+      realname: '',
+      gender: '',
+    },
+    isLogin: sidExists(),
 
     codes: [] as ICode[],
     workId: 0,
@@ -18,7 +30,8 @@ export default new Vuex.Store({
     models: [] as monaco.editor.ITextModel[],
   },
   getters: {
-    userId: state => state.userId,
+    isLogin: state => state.isLogin,
+    userId: state => state.user.id,
     workId: state => state.workId,
     workList: state => state.workList,
     filenames(state) {
@@ -30,6 +43,12 @@ export default new Vuex.Store({
     compiledSrc: state => `http://localhost:3000/api/work/${state.workId}/compiled`,
   },
   mutations: {
+    setLogin(state, login: boolean) {
+      state.isLogin = login;
+    },
+    setUser(state, user) {
+      state.user = user;
+    },
     setWorkId(state, workId: number) {
       state.workId = workId;
     },
@@ -62,6 +81,12 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    async login({ commit }, { phone, password }: { phone: string, password: string }) {
+      const res = await api.user.login(phone, password);
+      commit('setLogin', true);
+      commit('setUser', res.data);
+      return res;
+    },
     async getWorkList({ commit }, { userId }: { userId: number }) {
       const res = await api.work.getWorkList(userId);
       commit('setWorkList', res.data);

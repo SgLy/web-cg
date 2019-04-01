@@ -3,6 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Controller = require("../controller");
 var routes = [
     {
+        method: 'post',
+        path: '/api/user/login',
+        controller: Controller.login,
+    },
+    {
         method: 'get',
         path: '/api/work/:workId',
         controller: Controller.getWork,

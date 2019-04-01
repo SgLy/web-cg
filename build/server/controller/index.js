@@ -48,6 +48,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = require("../database");
+var session_1 = require("./session");
+exports.login = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var user;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, database_1.default.User.login(ctx.request.body.phone, ctx.request.body.password)];
+            case 1:
+                user = _a.sent();
+                if (user.success === 1) {
+                    session_1.assignCookie(user.id);
+                    session_1.setCookie(ctx, user.id);
+                }
+                ctx.body = JSON.stringify(user);
+                return [2 /*return*/];
+        }
+    });
+}); };
 exports.getWork = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
     var work;
     return __generator(this, function (_a) {
@@ -130,4 +147,6 @@ exports.newWork = function (ctx, next) { return __awaiter(_this, void 0, void 0,
 }); };
 var core_1 = require("./core");
 exports.compiled = core_1.compiled;
+var session_2 = require("./session");
+exports.sessionMiddleware = session_2.sessionMiddleware;
 //# sourceMappingURL=index.js.map

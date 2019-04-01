@@ -5,6 +5,7 @@ import * as bodyParser from 'koa-bodyparser';
 
 import { Server } from 'http';
 import * as path from 'path';
+import { sessionMiddleware } from './controller';
 import router from './routes';
 
 const app = new Koa();
@@ -17,7 +18,10 @@ app.use(Static(clientDir));
 if (process.env.NODE_ENV === 'development') {
   // tslint:disable-next-line no-console
   console.warn('Development mode detected, CORS enabled');
-  app.use(cors());
+  app.use(cors({
+    origin: 'http://localhost:8000',
+    credentials: true,
+  }));
 }
 
 app.use(async (ctx, next) => {
@@ -25,6 +29,8 @@ app.use(async (ctx, next) => {
   console.log(`[Server] ${new Date().toLocaleString()} ${ctx.method} ${ctx.url}`);
   await next();
 });
+
+app.use(sessionMiddleware);
 
 app
   .use(router.routes())

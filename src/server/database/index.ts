@@ -2,6 +2,7 @@ import * as mysql from 'mysql';
 import DATABASE_CONFIG from './config';
 
 import * as Work from './work';
+import * as User from './user';
 
 const config = Object.assign({}, DATABASE_CONFIG, {
   connectionLimit: 10,
@@ -19,4 +20,5 @@ export const query = async (queryString: string, values: any[]) => {
 
 export default {
   Work,
+  User,
 };

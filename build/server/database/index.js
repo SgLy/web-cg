@@ -39,6 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mysql = require("mysql");
 var config_1 = require("./config");
 var Work = require("./work");
+var User = require("./user");
 var config = Object.assign({}, config_1.default, {
     connectionLimit: 10,
 });
@@ -56,5 +57,6 @@ exports.query = function (queryString, values) { return __awaiter(_this, void 0,
 }); };
 exports.default = {
     Work: Work,
+    User: User,
 };
 //# sourceMappingURL=index.js.map

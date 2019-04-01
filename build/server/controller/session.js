@@ -36,53 +36,59 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var Koa = require("koa");
-var Static = require("koa-static");
-var cors = require("koa-cors");
-var bodyParser = require("koa-bodyparser");
-var path = require("path");
-var controller_1 = require("./controller");
-var routes_1 = require("./routes");
-var app = new Koa();
-app.use(bodyParser());
-var clientDir = path.join(__dirname, '..', 'client');
-app.use(Static(clientDir));
-if (process.env.NODE_ENV === 'development') {
-    // tslint:disable-next-line no-console
-    console.warn('Development mode detected, CORS enabled');
-    app.use(cors({
-        origin: 'http://localhost:8000',
-        credentials: true,
-    }));
-}
-app.use(function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+var UUID = require("uuid");
+var isUUID = require("is-uuid");
+var session = {};
+var parseCookie = function (ctx) {
+    var sid = ctx.cookies.get('sid');
+    if (!sid || !isUUID.v4(sid))
+        return;
+    if (session[sid] === undefined)
+        return;
+    ctx.request.body.userId = session[sid];
+};
+exports.setCookie = function (ctx, userId) {
+    var sid = Object.keys(session).find(function (s) { return session[s] === userId; });
+    if (!sid)
+        return;
+    ctx.cookies.set('sid', sid, {
+        maxAge: 10 * 60 * 1000,
+        httpOnly: false,
+        overwrite: false,
+    });
+};
+exports.assignCookie = function (userId) {
+    var sid = UUID.v4();
+    while (session[sid] !== undefined)
+        sid = UUID.v4();
+    session[sid] = userId;
+    return sid;
+};
+exports.cleanCookieByUserId = function (userId) {
+    var sid = Object.keys(session).find(function (s) { return session[s] === userId; });
+    if (!sid)
+        return;
+    delete session[sid];
+};
+exports.cleanCookieBySid = function (sid) {
+    if (session[sid] === undefined)
+        return;
+    if (!isUUID.v4(sid))
+        return;
+    delete session[sid];
+};
+exports.sessionMiddleware = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                // tslint:disable-next-line no-console
-                console.log("[Server] " + new Date().toLocaleString() + " " + ctx.method + " " + ctx.url);
+                parseCookie(ctx);
+                if (!next) return [3 /*break*/, 2];
                 return [4 /*yield*/, next()];
             case 1:
                 _a.sent();
-                return [2 /*return*/];
+                _a.label = 2;
+            case 2: return [2 /*return*/];
         }
     });
-}); });
-app.use(controller_1.sessionMiddleware);
-app
-    .use(routes_1.default.routes())
-    .use(routes_1.default.allowedMethods());
-var server;
-exports.startServer = function (port) {
-    if (port === void 0) { port = 3000; }
-    server = app.listen(port, function () {
-        // tslint:disable-next-line no-console
-        console.info("[Server] Listening " + port);
-    });
-};
-exports.stopServer = function () {
-    // tslint:disable-next-line no-console
-    console.info('[Server] Stopping');
-    server.close();
-};
-//# sourceMappingURL=index.js.map
+}); };
+//# sourceMappingURL=session.js.map

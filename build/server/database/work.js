@@ -44,6 +44,8 @@ function getWork(id) {
                 case 0: return [4 /*yield*/, index_1.query('SELECT * FROM work WHERE id = ?', [id])];
                 case 1:
                     works = _a.sent();
+                    if (works.length !== 1)
+                        return [2 /*return*/, { success: 0 }];
                     ret = {
                         id: works[0].id,
                         userId: works[0].user_id,

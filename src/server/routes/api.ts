@@ -10,6 +10,11 @@ interface IRoute {
 
 const routes: IRoute[] = [
   {
+    method: 'post',
+    path: '/api/user/login',
+    controller: Controller.login,
+  },
+  {
     method: 'get',
     path: '/api/work/:workId',
     controller: Controller.getWork,
