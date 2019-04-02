@@ -1,15 +1,15 @@
 <template>
   <div>
-    <div v-if="!isLogin">
-      <el-form ref="form" :model="user" label-width="50px">
-        <el-form-item label="手机">
+    <div v-if="!isLogin" style="padding: 1em;">
+      <el-form ref="userForm" :model="user" label-width="70px" label-position="left" :rules="rule">
+        <el-form-item label="手机" prop="phone">
           <el-input v-model="user.phone"></el-input>
         </el-form-item>
-        <el-form-item label="密码">
+        <el-form-item label="密码" prop="password">
           <el-input type="password" v-model="user.password"></el-input>
         </el-form-item>
-        <el-form-item v-if="showConfirm" label="确认密码">
-          <el-input v-model="user.confirm"></el-input>
+        <el-form-item v-if="type === 'register'" label="确认密码" prop="confirm">
+          <el-input type="password" v-model="user.confirm"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onLogin">登录</el-button>
@@ -34,7 +34,40 @@
           password: '',
           confirm: '',
         },
-        showConfirm: false,
+        type: 'login',
+        rule: {
+          phone: [{
+            validator(rule, value, callback) {
+              if (value === '') {
+                callback(new Error('请输入手机号'));
+              } else if (!value.match(/^1\d{10}$/)) {
+                callback(new Error('请输入正确的手机号'));
+              } else callback();
+            },
+            trigger: 'blur',
+          }],
+          password: [{
+            validator(rule, value, callback) {
+              if (value === '') {
+                callback(new Error('请输入密码'));
+              } else if (value.length < 6) {
+                callback(new Error('密码长度需要大于六位'));
+              } else callback();
+            },
+            trigger: 'blur',
+          }],
+          confirm: [{
+            validator(rule, value, callback) {
+              if (this.type === 'login') callback();
+              else if (value === '') {
+                callback(new Error('请再次输入密码'));
+              } else if (value !== this.user.password) {
+                callback(new Error('两次输入密码不一致'));
+              } else callback();
+            },
+            trigger: 'blur',
+          }],
+        },
       };
     },
     computed: {
@@ -59,30 +92,47 @@
       }
     },
     methods: {
-      onRegister() {},
-      async onLogin() {
-        const res = await this.login({
-          phone: this.user.phone,
-          password: this.user.password,
+      async onRegister() {
+        this.type = 'register';
+        this.$refs.userForm.validate(async valid => {
+          if (valid) {
+            const res = await this.register({
+              phone: this.user.phone,
+              password: this.user.password,
+            });
+          } else return false;
         });
-        if (res.data.success) {
-          this.$notify({
-            title: '登录成功',
-            message: `欢迎您回来，${res.data.nickname}`,
-            type: 'success',
-          });
-        } else {
-          this.$notify({
-            title: '登录失败',
-            message: '请检查手机号码和密码！',
-            type: 'error',
-          });
-        }
       },
-      ...mapActions([ 'login', 'getUserInfo' ]),
+      async onLogin() {
+        this.type = 'login';
+        this.$refs.userForm.validate(async valid => {
+          if (!valid) return false;
+          const res = await this.login({
+            phone: this.user.phone,
+            password: this.user.password,
+          });
+          if (res.data.success) {
+            this.$notify({
+              title: '登录成功',
+              message: `欢迎您回来，${res.data.nickname}`,
+              type: 'success',
+            });
+          } else {
+            this.$notify({
+              title: '登录失败',
+              message: '请检查手机号码和密码！',
+              type: 'error',
+            });
+          }
+        });
+      },
+      ...mapActions([ 'login', 'register', 'getUserInfo' ]),
     },
   });
 </script>
 
 <style scoped>
+.el-form-item:last-child {
+  margin-bottom: 0;
+}
 </style>

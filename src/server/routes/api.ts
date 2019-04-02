@@ -15,6 +15,11 @@ const routes: IRoute[] = [
     controller: Controller.login,
   },
   {
+    method: 'post',
+    path: '/api/user/register',
+    controller: Controller.register,
+  },
+  {
     method: 'get',
     path: '/api/user/me',
     controller: Controller.me,

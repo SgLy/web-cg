@@ -18,7 +18,30 @@ export const query = async (queryString: string, values: any[]) => {
   });
 };
 
-export default {
+const EXPORTS = {
   Work,
   User,
 };
+
+// @ts-ignore
+const exceptionWrapper = exported => {
+  const res: {} = {};
+  Object.keys(exported).map(category => {
+    // @ts-ignore
+    res[category] = {};
+    Object.keys(exported[category]).map(f => {
+      const func = exported[category][f];
+      // @ts-ignore
+      res[category][f] = async (...args) => {
+        try {
+          return await func(...args);
+        } catch (e) {
+          return { success: 0 };
+        }
+      };
+    });
+  });
+  return res;
+};
+
+export default exceptionWrapper(EXPORTS) as typeof EXPORTS;

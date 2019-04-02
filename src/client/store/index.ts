@@ -12,7 +12,6 @@ export default new Vuex.Store({
     user: {
       id: 0,
       phone: '',
-      email: '',
       student_id: '',
       nickname: '',
       realname: '',
@@ -48,8 +47,8 @@ export default new Vuex.Store({
       state.isLogin = login;
     },
     setUser(state, user) {
-      const { id, phone, email, student_id, nickname, realname, gender } = user;
-      state.user = { id, phone, email, student_id, nickname, realname, gender };
+      const { id, phone, student_id, nickname, realname, gender } = user;
+      state.user = { id, phone, student_id, nickname, realname, gender };
     },
     setWorkId(state, workId: number) {
       state.workId = workId;
@@ -91,6 +90,15 @@ export default new Vuex.Store({
         commit('setLogin', false);
       }
       return res.data;
+    },
+    async register({ commit, dispatch }, { phone, password }: { phone: string, password: string }) {
+      const res = await api.user.register(phone, password);
+      if (res.data.success === 1) {
+        commit('setLogin', true);
+        commit('setUser', res.data);
+        dispatch('getWorkList');
+      }
+      return res;
     },
     async login({ commit, dispatch }, { phone, password }: { phone: string, password: string }) {
       const res = await api.user.login(phone, password);

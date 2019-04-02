@@ -65,7 +65,7 @@ function get(userId) {
 exports.get = get;
 function login(phone, password) {
     return __awaiter(this, void 0, void 0, function () {
-        var result, _a, id, email, student_id, nickname, realname, gender;
+        var result, _a, id, student_id, nickname, realname, gender;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0: return [4 /*yield*/, index_1.query('SELECT * FROM user WHERE phone = ? AND password = ?', [phone, password])];
@@ -73,14 +73,34 @@ function login(phone, password) {
                     result = _b.sent();
                     if (result.length !== 1)
                         return [2 /*return*/, { success: 0 }];
-                    _a = result[0], id = _a.id, email = _a.email, student_id = _a.student_id, nickname = _a.nickname, realname = _a.realname, gender = _a.gender;
+                    _a = result[0], id = _a.id, student_id = _a.student_id, nickname = _a.nickname, realname = _a.realname, gender = _a.gender;
                     return [2 /*return*/, {
                             success: 1,
-                            phone: phone, id: id, email: email, student_id: student_id, nickname: nickname, realname: realname, gender: gender,
+                            phone: phone, id: id, student_id: student_id, nickname: nickname, realname: realname, gender: gender,
                         }];
             }
         });
     });
 }
 exports.login = login;
+function register(phone, password) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result, _a, id, student_id, nickname, realname, gender;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, index_1.query("\n    INSERT INTO user\n      (phone, password, student_id, nickname, realname, gender)\n    VALUES\n      (?, ?, '', ?, '', 0)\n    ", [phone, password, phone])];
+                case 1:
+                    result = _b.sent();
+                    if (result.affectedRows !== 1)
+                        return [2 /*return*/, { success: 0 }];
+                    _a = result[0], id = _a.id, student_id = _a.student_id, nickname = _a.nickname, realname = _a.realname, gender = _a.gender;
+                    return [2 /*return*/, {
+                            success: 1,
+                            phone: phone, id: id, student_id: student_id, nickname: nickname, realname: realname, gender: gender,
+                        }];
+            }
+        });
+    });
+}
+exports.register = register;
 //# sourceMappingURL=user.js.map

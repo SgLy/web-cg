@@ -15,6 +15,12 @@ export function createApi() {
           phone, password: pwd,
         });
       },
+      register: (phone: string, password: string) => {
+        const pwd = crypto.SHA1(password).toString();
+        return conn.post('/user/register', {
+          phone, password: pwd,
+        });
+      },
     },
     work: {
       getWork: (workId: number) => conn.get(`/work/${workId}`),

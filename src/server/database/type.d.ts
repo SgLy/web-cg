@@ -1,7 +1,6 @@
 interface IUser {
   id: number;
   phone: string;
-  email: string;
   password: string;
   student_id?: string;
   nickname: string;
@@ -45,6 +44,7 @@ interface ISubmission {
 interface IWork {
   id: number;
   user_id: number;
+  name: string;
   public: boolean;
 }
 

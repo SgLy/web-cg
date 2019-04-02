@@ -9,14 +9,12 @@ GRANT ALL PRIVILEGES ON web_cg.* TO 'web_cg'@'%';
 CREATE TABLE user (
     id INT PRIMARY KEY AUTO_INCREMENT,
     phone VARCHAR(16) NOT NULL,
-    email VARCHAR(128) NOT NULL,
     password VARCHAR(256) NOT NULL,
     student_id VARCHAR(16) NOT NULL,
     nickname VARCHAR(256) NOT NULL,
     realname VARCHAR(256) NOT NULL,
     gender INT NOT NULL DEFAULT 0,
     UNIQUE INDEX (phone),
-    UNIQUE INDEX (email)
 );
 
 CREATE TABLE course (

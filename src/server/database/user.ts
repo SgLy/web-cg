@@ -18,9 +18,25 @@ export async function login(phone: string, password: string) {
     [phone, password],
   );
   if (result.length !== 1) return { success: 0 };
-  const { id, email, student_id, nickname, realname, gender } = result[0];
+  const { id, student_id, nickname, realname, gender } = result[0];
   return {
     success: 1,
-    phone, id, email, student_id, nickname, realname, gender,
+    phone, id, student_id, nickname, realname, gender,
+  };
+}
+
+export async function register(phone: string, password: string) {
+  const result = await query(`
+    INSERT INTO user
+      (phone, password, student_id, nickname, realname, gender)
+    VALUES
+      (?, ?, '', ?, '', 0)
+    `, [phone, password, phone],
+  );
+  if (result.affectedRows !== 1) return { success: 0 };
+  const { id, student_id, nickname, realname, gender } = result[0];
+  return {
+    success: 1,
+    phone, id, student_id, nickname, realname, gender,
   };
 }

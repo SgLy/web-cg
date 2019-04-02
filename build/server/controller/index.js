@@ -65,6 +65,22 @@ exports.login = function (ctx, next) { return __awaiter(_this, void 0, void 0, f
         }
     });
 }); };
+exports.register = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var user;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, database_1.default.User.register(ctx.request.body.phone, ctx.request.body.password)];
+            case 1:
+                user = _a.sent();
+                if (user.success === 1) {
+                    session_1.assignCookie(user.id);
+                    session_1.setCookie(ctx, user.id);
+                }
+                ctx.body = JSON.stringify(user);
+                return [2 /*return*/];
+        }
+    });
+}); };
 exports.me = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
     var _a, _b, _c;
     return __generator(this, function (_d) {

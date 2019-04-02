@@ -55,8 +55,43 @@ exports.query = function (queryString, values) { return __awaiter(_this, void 0,
             })];
     });
 }); };
-exports.default = {
+var EXPORTS = {
     Work: Work,
     User: User,
 };
+// @ts-ignore
+var exceptionWrapper = function (exported) {
+    var res = {};
+    Object.keys(exported).map(function (category) {
+        // @ts-ignore
+        res[category] = {};
+        Object.keys(exported[category]).map(function (f) {
+            var func = exported[category][f];
+            // @ts-ignore
+            res[category][f] = function () {
+                var args = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    args[_i] = arguments[_i];
+                }
+                return __awaiter(_this, void 0, void 0, function () {
+                    var e_1;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                return [4 /*yield*/, func.apply(void 0, args)];
+                            case 1: return [2 /*return*/, _a.sent()];
+                            case 2:
+                                e_1 = _a.sent();
+                                return [2 /*return*/, { success: 0 }];
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                });
+            };
+        });
+    });
+    return res;
+};
+exports.default = exceptionWrapper(EXPORTS);
 //# sourceMappingURL=index.js.map

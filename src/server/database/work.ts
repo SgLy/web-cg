@@ -106,7 +106,7 @@ export async function getWorkList(userId: number) {
     'SELECT * FROM work WHERE user_id = ?',
     [userId],
   );
-  return result.map(r => ({
+  return result.map((r: IWork) => ({
     name: r.name,
     id: r.id,
   }));

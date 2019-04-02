@@ -4,7 +4,7 @@
       :default-active="activeIndex"
       mode="horizontal"
     >
-      <el-menu-item index="1" disabled>总览</el-menu-item>
+      <el-menu-item index="1">总览</el-menu-item>
       <el-menu-item index="2">工作区</el-menu-item>
       <el-popover
         placement="bottom-end"
