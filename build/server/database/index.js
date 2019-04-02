@@ -83,6 +83,8 @@ var exceptionWrapper = function (exported) {
                             case 1: return [2 /*return*/, _a.sent()];
                             case 2:
                                 e_1 = _a.sent();
+                                // tslint:disable-next-line no-console
+                                console.error("[ERROR] " + e_1);
                                 return [2 /*return*/, { success: 0 }];
                             case 3: return [2 /*return*/];
                         }

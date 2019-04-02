@@ -40,7 +40,10 @@ export default new Vuex.Store({
     currentFile(state) {
       return state.currentCodeFilename;
     },
-    compiledSrc: state => `http://localhost:3000/api/work/${state.workId}/compiled`,
+    compiledSrc: state => {
+      if (state.workId === 0) return 'about:blank';
+      return `http://localhost:3000/api/work/${state.workId}/compiled`;
+    },
   },
   mutations: {
     setLogin(state, login: boolean) {
@@ -95,8 +98,8 @@ export default new Vuex.Store({
       const res = await api.user.register(phone, password);
       if (res.data.success === 1) {
         commit('setLogin', true);
-        commit('setUser', res.data);
         dispatch('getWorkList');
+        dispatch('getUserInfo');
       }
       return res;
     },
@@ -121,6 +124,7 @@ export default new Vuex.Store({
     },
     async newWork({ commit }, { name }: { name: string }) {
       const res = await api.work.newWork(name);
+      commit('setWorkId', res.data.id);
       return res.data;
     },
     async editorOnChange({ state, commit, dispatch }, { content }: { content: string }) {

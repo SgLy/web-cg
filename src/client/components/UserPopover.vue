@@ -37,7 +37,7 @@
         type: 'login',
         rule: {
           phone: [{
-            validator(rule, value, callback) {
+            validator: (rule, value, callback) => {
               if (value === '') {
                 callback(new Error('请输入手机号'));
               } else if (!value.match(/^1\d{10}$/)) {
@@ -47,7 +47,7 @@
             trigger: 'blur',
           }],
           password: [{
-            validator(rule, value, callback) {
+            validator: (rule, value, callback) => {
               if (value === '') {
                 callback(new Error('请输入密码'));
               } else if (value.length < 6) {
@@ -57,7 +57,7 @@
             trigger: 'blur',
           }],
           confirm: [{
-            validator(rule, value, callback) {
+            validator: (rule, value, callback) => {
               if (this.type === 'login') callback();
               else if (value === '') {
                 callback(new Error('请再次输入密码'));
@@ -93,13 +93,28 @@
     },
     methods: {
       async onRegister() {
+        const previousState = this.type;
         this.type = 'register';
+        if (previousState === 'login') return;
         this.$refs.userForm.validate(async valid => {
           if (valid) {
             const res = await this.register({
               phone: this.user.phone,
               password: this.user.password,
             });
+            if (res.data.success) {
+              this.$notify({
+                title: '注册成功',
+                message: `${this.user.phone}，欢迎来到 WebCG！`,
+                type: 'success',
+              });
+            } else {
+              this.$notify({
+                title: '注册失败',
+                message: '请尝试更换手机号！',
+                type: 'error',
+              });
+            }
           } else return false;
         });
       },

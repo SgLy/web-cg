@@ -34,9 +34,8 @@ export async function register(phone: string, password: string) {
     `, [phone, password, phone],
   );
   if (result.affectedRows !== 1) return { success: 0 };
-  const { id, student_id, nickname, realname, gender } = result[0];
   return {
     success: 1,
-    phone, id, student_id, nickname, realname, gender,
+    id: result.insertId,
   };
 }

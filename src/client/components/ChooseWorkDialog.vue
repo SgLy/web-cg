@@ -65,6 +65,7 @@
           });
           this.$emit('close');
           await this.getWork({ workId: res.id });
+          this.$router.push(`/workspace/${res.id}`);
         }
       },
       async onOpen() {

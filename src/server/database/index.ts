@@ -36,6 +36,8 @@ const exceptionWrapper = exported => {
         try {
           return await func(...args);
         } catch (e) {
+          // tslint:disable-next-line no-console
+          console.error(`[ERROR] ${e}`);
           return { success: 0 };
         }
       };
