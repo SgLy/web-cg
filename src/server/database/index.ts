@@ -3,14 +3,21 @@ import DATABASE_CONFIG from './config';
 
 import * as Work from './work';
 import * as User from './user';
+import * as Course from './course';
+import * as Assignment from './assignment';
 
 const config = Object.assign({}, DATABASE_CONFIG, {
   connectionLimit: 10,
 });
 const pool = mysql.createPool(config);
 
+interface IResult extends Array<any> {
+  affectedRows?: number;
+  insertId?: number;
+}
+
 export const query = async (queryString: string, values: any[]) => {
-  return new Promise<any>((resolve, reject) => {
+  return new Promise<IResult>((resolve, reject) => {
     pool.query(queryString, values, (err, result) => {
       if (err) reject(err);
       resolve(result);
@@ -21,6 +28,8 @@ export const query = async (queryString: string, values: any[]) => {
 const EXPORTS = {
   Work,
   User,
+  Course,
+  Assignment,
 };
 
 // @ts-ignore

@@ -14,12 +14,13 @@ CREATE TABLE user (
     nickname VARCHAR(256) NOT NULL,
     realname VARCHAR(256) NOT NULL,
     gender INT NOT NULL DEFAULT 0,
-    UNIQUE INDEX (phone),
+    UNIQUE INDEX (phone)
 );
 
 CREATE TABLE course (
   id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(256) NOT NULL,
+  description TEXT,
   teacher VARCHAR(32) NOT NULL
 );
 
@@ -50,7 +51,7 @@ CREATE TABLE submission (
   work_id INT NOT NULL,
   assignment_id INT NOT NULL,
   submit_time TIMESTAMP NOT NULL,
-  UNIQUE INDEX (user_id, work_id, assignment_id)
+  UNIQUE INDEX (user_id, assignment_id)
 );
 
 CREATE TABLE work (

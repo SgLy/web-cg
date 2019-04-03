@@ -102,7 +102,7 @@ export async function deleteCode(codeId: number) {
 }
 
 export async function getWorkList(userId: number) {
-  const result = await query(
+  const result: IWork[] = await query(
     'SELECT * FROM work WHERE user_id = ?',
     [userId],
   );

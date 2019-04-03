@@ -11,6 +11,7 @@ interface IUser {
 interface ICourse {
   id: number;
   name: string;
+  description: string;
   teacher: string;
 }
 

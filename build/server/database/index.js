@@ -40,6 +40,8 @@ var mysql = require("mysql");
 var config_1 = require("./config");
 var Work = require("./work");
 var User = require("./user");
+var Course = require("./course");
+var Assignment = require("./assignment");
 var config = Object.assign({}, config_1.default, {
     connectionLimit: 10,
 });
@@ -58,6 +60,8 @@ exports.query = function (queryString, values) { return __awaiter(_this, void 0,
 var EXPORTS = {
     Work: Work,
     User: User,
+    Course: Course,
+    Assignment: Assignment,
 };
 // @ts-ignore
 var exceptionWrapper = function (exported) {
