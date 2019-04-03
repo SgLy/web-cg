@@ -1,22 +1,25 @@
 <template>
   <div>
-    <ChooseWorkDialog
-      :display="workId === 0"
-    />
-    <el-tabs
-      type="border-card"
-      id="workspace"
-      tabPosition="left"
-      :style="{ height: this.height }"
-      @tab-click="onTabClick"
-    >
-      <el-tab-pane label="代码">
-        <Editor />
-      </el-tab-pane>
-      <el-tab-pane label="输出">
-        <iframe id="canvas" :src="compiledSrc"></iframe>
-      </el-tab-pane>
-    </el-tabs>
+    <div v-if="!isLogin" style="padding: 1em;">请先登录！</div>
+    <div v-else>
+      <ChooseWorkDialog
+        :display="workId === 0"
+      />
+      <el-tabs
+        type="border-card"
+        id="workspace"
+        tabPosition="left"
+        :style="{ height: this.height }"
+        @tab-click="onTabClick"
+      >
+        <el-tab-pane label="代码">
+          <Editor />
+        </el-tab-pane>
+        <el-tab-pane label="输出">
+          <iframe id="canvas" :src="compiledSrc"></iframe>
+        </el-tab-pane>
+      </el-tabs>
+    </div>
   </div>
 </template>
 
@@ -36,7 +39,7 @@
       ChooseWorkDialog,
     },
     computed: {
-      ...mapGetters([ 'workId', 'userId', 'compiledSrc' ]),
+      ...mapGetters([ 'isLogin', 'workId', 'userId', 'compiledSrc' ]),
     },
     async mounted() {
       const workId = this.$route.params.workId as number;

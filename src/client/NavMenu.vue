@@ -1,11 +1,12 @@
 <template>
   <div>
     <el-menu
-      :default-active="activeIndex"
+      :default-active="$route.name"
       mode="horizontal"
+      :router="true"
     >
-      <el-menu-item index="1">总览</el-menu-item>
-      <el-menu-item index="2">工作区</el-menu-item>
+      <el-menu-item index="dashboard" :route="dashboardRoute">总览</el-menu-item>
+      <el-menu-item index="workspace" :route="workspaceRoute">工作区</el-menu-item>
       <el-popover
         placement="bottom-end"
         width="300"
@@ -30,12 +31,15 @@
     },
     data() {
       return {
-        activeIndex: '2',
         popoverVisible: false,
       };
     },
     computed: {
-      ...mapGetters([ 'isLogin', 'userNickname' ]),
+      dashboardRoute: () => '/dashboard',
+      workspaceRoute() {
+        return this.workId === 0 ? '/workspace' : `/workspace/${this.workId}`;
+      },
+      ...mapGetters([ 'isLogin', 'userNickname', 'workId' ]),
     },
   });
 </script>

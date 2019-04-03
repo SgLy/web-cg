@@ -1,8 +1,7 @@
 <template>
   <div>
     <NavMenu ref="navMenu" />
-    <div v-if="!isLogin" style="padding: 1em;">请先登录！</div>
-    <router-view v-else :height="workspaceHeight" />
+    <router-view :height="height" />
   </div>
 </template>
 
@@ -24,13 +23,13 @@
     },
     data() {
       return {
-        workspaceHeight: 'calc(100% - 70px)',
+        height: 'calc(100% - 70px)',
       };
     },
     methods: {},
     mounted() {
       const navHeight = this.$refs.navMenu.$el.clientHeight;
-      this.workspaceHeight = `calc(100% - ${navHeight + 3}px)`;
+      this.height = `calc(100% - ${navHeight + 3}px)`;
     },
   });
 </script>

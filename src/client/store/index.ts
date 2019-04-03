@@ -5,7 +5,11 @@ import * as monaco from 'monaco-editor';
 
 const api = createApi();
 
-const sidExists = () => !!document.cookie.match(/sid=(.+?)($|;)/);
+const sidExists = () => {
+  const m = document.cookie.match(/sid=(.+?)($|;)/);
+  if (!m) return false;
+  return isUUID.v4(m[1]);
+};
 
 export default new Vuex.Store({
   state: {
