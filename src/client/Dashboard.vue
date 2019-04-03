@@ -7,7 +7,7 @@
       :style="{ height: this.height }"
     >
       <el-tab-pane label="课程">
-        <div>课程</div>
+        <Course />
       </el-tab-pane>
       <el-tab-pane label="作业">
         <div>作业</div>
@@ -22,9 +22,13 @@
 <script lang="ts">
   import Vue from 'vue';
   import { mapActions, mapGetters } from 'vuex';
+  import Course from './Course.vue';
 
   export default Vue.extend({
     name: 'Dashboard',
+    components: {
+      Course,
+    },
     props: {
       height: String,
     },

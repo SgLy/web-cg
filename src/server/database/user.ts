@@ -36,6 +36,6 @@ export async function register(phone: string, password: string) {
   if (result.affectedRows !== 1) return { success: 0 };
   return {
     success: 1,
-    id: result.insertId,
+    id: result.insertId!,
   };
 }

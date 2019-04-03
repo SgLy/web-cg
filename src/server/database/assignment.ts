@@ -1,9 +1,9 @@
 import { query } from './index';
 
-export async function add(courseId: number, name: string, deadline: number) {
+export async function add(courseId: number, name: string, description: string, deadline: number) {
   const result = await query(
-    'INSERT INTO assignment (course_id, name, deadline) VALUES (?, ?, ?)',
-    [courseId, name, deadline],
+    'INSERT INTO assignment (course_id, name, description, deadline) VALUES (?, ?, ?)',
+    [courseId, name, description, deadline],
   );
   if (result.affectedRows === 1) return { success: 1 };
   return { success: 0 };
@@ -37,6 +37,7 @@ export async function listByUser(userId: number) {
       id AS assignment_id,
       course_id,
       name AS assignment_name,
+      description AS assignment_description,
       deadline
     FROM assignment
     RIGHT JOIN (
@@ -51,12 +52,15 @@ export async function listByUser(userId: number) {
     success: 1,
     assignments: result.map(r => ({
       id: r.assignment_id,
-      courseId: r.course_id,
       name: r.assignment_name,
       deadline: r.deadline,
-      courseName: r.name,
-      courseDescription: r.description,
-      teacher: r.teacher,
+      description: r.assignment_description,
+      course: {
+        id: r.course_id,
+        name: r.name,
+        description: r.description,
+        teacher: r.teacher,
+      },
     })),
   };
 }
@@ -71,6 +75,7 @@ export async function listByCourse(courseId: number) {
     assignments: result.map(r => ({
       id: r.id,
       name: r.name,
+      description: r.description,
       deadline: r.deadline,
     })),
   };

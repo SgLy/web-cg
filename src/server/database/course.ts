@@ -16,6 +16,31 @@ export async function list(offset: number) {
   };
 }
 
+export async function listWithUser(offset: number, userId: number) {
+  const result: (ICourse & { registered: true|null })[] = await query(
+    `
+      SELECT * FROM course
+      LEFT JOIN (
+        SELECT course_id, TRUE AS registered FROM course_reg
+        WHERE user_id = ?
+      ) AS my_course
+      ON course.id = my_course.course_id
+      ORDER BY id LIMIT 10 OFFSET ?
+    `,
+    [userId, offset],
+  );
+  return {
+    success: 1,
+    courses: result.map(r => ({
+      id: r.id,
+      name: r.name,
+      description: r.description,
+      teacher: r.teacher,
+      registered: !!r.registered,
+    })),
+  };
+}
+
 export async function registerCourse(userId: number, courseId: number) {
   const result = await query(
     'INSERT INTO course_reg (user_id, course_id) VALUES (?, ?)',

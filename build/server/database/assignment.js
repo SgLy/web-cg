@@ -36,12 +36,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("./index");
-function add(courseId, name, deadline) {
+function add(courseId, name, description, deadline) {
     return __awaiter(this, void 0, void 0, function () {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, index_1.query('INSERT INTO assignment (course_id, name, deadline) VALUES (?, ?, ?)', [courseId, name, deadline])];
+                case 0: return [4 /*yield*/, index_1.query('INSERT INTO assignment (course_id, name, description, deadline) VALUES (?, ?, ?)', [courseId, name, description, deadline])];
                 case 1:
                     result = _a.sent();
                     if (result.affectedRows === 1)
@@ -92,19 +92,22 @@ function listByUser(userId) {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, index_1.query("\n    SELECT\n      id AS assignment_id,\n      course_id,\n      name AS assignment_name,\n      deadline\n    FROM assignment\n    RIGHT JOIN (\n      SELECT course_id FROM course_reg\n      WHERE user_id = ?\n    ) AS my_course\n    ON my_course.course_id = assignment.course_id\n    LEFT JOIN course\n    ON course.id = assignment.course_id", [userId])];
+                case 0: return [4 /*yield*/, index_1.query("\n    SELECT\n      id AS assignment_id,\n      course_id,\n      name AS assignment_name,\n      description AS assignment_description,\n      deadline\n    FROM assignment\n    RIGHT JOIN (\n      SELECT course_id FROM course_reg\n      WHERE user_id = ?\n    ) AS my_course\n    ON my_course.course_id = assignment.course_id\n    LEFT JOIN course\n    ON course.id = assignment.course_id", [userId])];
                 case 1:
                     result = _a.sent();
                     return [2 /*return*/, {
                             success: 1,
                             assignments: result.map(function (r) { return ({
                                 id: r.assignment_id,
-                                courseId: r.course_id,
                                 name: r.assignment_name,
                                 deadline: r.deadline,
-                                courseName: r.name,
-                                courseDescription: r.description,
-                                teacher: r.teacher,
+                                description: r.assignment_description,
+                                course: {
+                                    id: r.course_id,
+                                    name: r.name,
+                                    description: r.description,
+                                    teacher: r.teacher,
+                                },
                             }); }),
                         }];
             }
@@ -125,6 +128,7 @@ function listByCourse(courseId) {
                             assignments: result.map(function (r) { return ({
                                 id: r.id,
                                 name: r.name,
+                                description: r.description,
                                 deadline: r.deadline,
                             }); }),
                         }];

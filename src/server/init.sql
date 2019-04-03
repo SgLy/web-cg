@@ -42,6 +42,7 @@ CREATE TABLE assignment (
   id INT PRIMARY KEY AUTO_INCREMENT,
   course_id INT NOT NULL,
   name VARCHAR(256) NOT NULL,
+  description TEXT,
   deadline TIMESTAMP NOT NULL
 );
 

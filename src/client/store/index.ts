@@ -23,6 +23,8 @@ export default new Vuex.Store({
     },
     isLogin: sidExists(),
 
+    courses: [] as ICourse[],
+
     codes: [] as ICode[],
     workId: 0,
     workList: [] as { name: string, id: number }[],
@@ -37,6 +39,7 @@ export default new Vuex.Store({
     userNickname: state => state.user.nickname,
     userId: state => state.user.id,
     workId: state => state.workId,
+    courses: state => state.courses,
     workList: state => state.workList,
     filenames(state) {
       return state.codes.map(c => c.filename);
@@ -50,6 +53,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    setCourseList(state, courses: ICourse[]) {
+      state.courses = courses;
+    },
     setLogin(state, login: boolean) {
       state.isLogin = login;
     },
@@ -89,6 +95,13 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    async getCourseList({ commit }, { offset }: { offset: number }) {
+      const res = await api.course.list(offset);
+      if (res.data.success === 1) {
+        commit('setCourseList', res.data.courses);
+      }
+      return res.data;
+    },
     async getUserInfo({ commit }) {
       const res = await api.user.me();
       if (res.data.success === 1) {
@@ -104,6 +117,7 @@ export default new Vuex.Store({
         commit('setLogin', true);
         dispatch('getWorkList');
         dispatch('getUserInfo');
+        dispatch('getCourseList', { offset: 0 });
       }
       return res;
     },
@@ -113,6 +127,7 @@ export default new Vuex.Store({
         commit('setLogin', true);
         commit('setUser', res.data);
         dispatch('getWorkList');
+        dispatch('getCourseList', { offset: 0 });
       }
       return res;
     },

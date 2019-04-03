@@ -1,13 +1,59 @@
+interface IUser {
+  id: number;
+  phone: string;
+  password: string;
+  student_id?: string;
+  nickname: string;
+  realname: string;
+  gender: number;
+}
+
+interface ICourse {
+  id: number;
+  name: string;
+  description: string;
+  teacher: string;
+}
+
+interface ICourseReg {
+  id: number;
+  user_id: number;
+  course_id: number;
+}
+
+interface ICourseTA {
+  id: number;
+  user_id: number;
+  course_id: number;
+}
+
+interface IAssignment {
+  id: number;
+  course_id: number;
+  name: string;
+  deadline: number;
+  description: string;
+}
+
+interface ISubmission {
+  id: number;
+  user_id: number;
+  work_id: number;
+  assignment_id: number;
+  submitTime: number;
+}
+
 interface IWork {
   id: number;
-  public: number;
-  userId: number;
+  user_id: number;
+  name: string;
   codes: ICode[];
+  public: boolean;
 }
 
 interface ICode {
-  content: string;
-  filename: string;
   id: number;
+  filename: string;
+  content: string;
   type: string;
 }

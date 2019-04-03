@@ -58,6 +58,29 @@ function list(offset) {
     });
 }
 exports.list = list;
+function listWithUser(offset, userId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, index_1.query("\n      SELECT * FROM course\n      LEFT JOIN (\n        SELECT course_id, TRUE AS registered FROM course_reg\n        WHERE user_id = ?\n      ) AS my_course\n      ON course.id = my_course.course_id\n      ORDER BY id LIMIT 10 OFFSET ?\n    ", [userId, offset])];
+                case 1:
+                    result = _a.sent();
+                    return [2 /*return*/, {
+                            success: 1,
+                            courses: result.map(function (r) { return ({
+                                id: r.id,
+                                name: r.name,
+                                description: r.description,
+                                teacher: r.teacher,
+                                registered: !!r.registered,
+                            }); }),
+                        }];
+            }
+        });
+    });
+}
+exports.listWithUser = listWithUser;
 function registerCourse(userId, courseId) {
     return __awaiter(this, void 0, void 0, function () {
         var result;

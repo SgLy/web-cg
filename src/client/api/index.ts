@@ -7,6 +7,9 @@ export function createApi() {
     withCredentials: true,
   });
   return {
+    course: {
+      list: (offset: number) => conn.get(`/course/list/${offset}`),
+    },
     user: {
       me: () => conn.get('/user/me'),
       login: (phone: string, password: string) => {
