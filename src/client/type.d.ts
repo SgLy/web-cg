@@ -13,6 +13,7 @@ interface ICourse {
   name: string;
   description: string;
   teacher: string;
+  registered: boolean;
 }
 
 interface ICourseReg {
@@ -30,10 +31,15 @@ interface ICourseTA {
 interface IAssignment {
   id: number;
   name: string;
-  deadline: number;
+  deadline: string;
   deadlineStr: string;
   description: string;
   course: ICourse;
+  submission: {
+    submitted_id: number;
+    submitTime: string;
+    submitTimeStr: string;
+  }
 }
 
 interface ISubmission {

@@ -13,3 +13,16 @@ export const list: IMiddleware = async (ctx, next) => {
     );
   }
 };
+
+export const register: IMiddleware = async (ctx, next) => {
+  if (ctx.request.body.login) {
+    ctx.body = JSON.stringify(
+      await DB.Course.registerCourse(
+        ctx.request.body.userId,
+        ctx.params.courseId,
+      ),
+    );
+  } else {
+    ctx.body = JSON.stringify({ success: 0 });
+  }
+};

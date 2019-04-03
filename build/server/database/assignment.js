@@ -92,7 +92,7 @@ function listByUser(userId) {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, index_1.query("\n    SELECT\n      assignment.*,\n      course.id AS course_id,\n      course.name AS course_name,\n      course.description AS course_description,\n      course.teacher AS course_teacher\n    FROM assignment\n    RIGHT JOIN (\n      SELECT course_id FROM course_reg\n      WHERE user_id = ?\n    ) AS my_course\n    ON my_course.course_id = assignment.course_id\n    LEFT JOIN course\n    ON course.id = assignment.course_id", [userId])];
+                case 0: return [4 /*yield*/, index_1.query("\n    SELECT\n      assignment.*,\n      course.id AS course_id,\n      course.name AS course_name,\n      course.description AS course_description,\n      course.teacher AS course_teacher,\n      submission.submit_time,\n      submission.work_id AS submitted_id\n    FROM assignment\n    RIGHT JOIN (\n      SELECT course_id FROM course_reg\n      WHERE user_id = ?\n    ) AS my_course\n    ON my_course.course_id = assignment.course_id\n    LEFT JOIN course\n    ON course.id = assignment.course_id\n    LEFT JOIN submission\n    ON assignment.id = submission.assignment_id\n      AND ? = submission.user_id\n    ", [userId, userId])];
                 case 1:
                     result = _a.sent();
                     return [2 /*return*/, {
@@ -107,6 +107,10 @@ function listByUser(userId) {
                                     name: r.course_name,
                                     description: r.course_description,
                                     teacher: r.course_teacher,
+                                },
+                                submission: {
+                                    submitTime: r.submit_time,
+                                    submittedId: r.submitted_id,
                                 },
                             }); }),
                         }];

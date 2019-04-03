@@ -38,7 +38,9 @@ export async function listByUser(userId: number) {
       course.id AS course_id,
       course.name AS course_name,
       course.description AS course_description,
-      course.teacher AS course_teacher
+      course.teacher AS course_teacher,
+      submission.submit_time,
+      submission.work_id AS submitted_id
     FROM assignment
     RIGHT JOIN (
       SELECT course_id FROM course_reg
@@ -46,7 +48,11 @@ export async function listByUser(userId: number) {
     ) AS my_course
     ON my_course.course_id = assignment.course_id
     LEFT JOIN course
-    ON course.id = assignment.course_id`, [userId],
+    ON course.id = assignment.course_id
+    LEFT JOIN submission
+    ON assignment.id = submission.assignment_id
+      AND ? = submission.user_id
+    `, [userId, userId],
   );
   return {
     success: 1,
@@ -60,6 +66,10 @@ export async function listByUser(userId: number) {
         name: r.course_name,
         description: r.course_description,
         teacher: r.course_teacher,
+      },
+      submission: {
+        submitTime: r.submit_time,
+        submittedId: r.submitted_id,
       },
     })),
   };

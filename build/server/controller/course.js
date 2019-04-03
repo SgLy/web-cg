@@ -61,4 +61,23 @@ exports.list = function (ctx, next) { return __awaiter(_this, void 0, void 0, fu
         }
     });
 }); };
+exports.register = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                if (!ctx.request.body.login) return [3 /*break*/, 2];
+                _a = ctx;
+                _c = (_b = JSON).stringify;
+                return [4 /*yield*/, database_1.default.Course.registerCourse(ctx.request.body.userId, ctx.params.courseId)];
+            case 1:
+                _a.body = _c.apply(_b, [_d.sent()]);
+                return [3 /*break*/, 3];
+            case 2:
+                ctx.body = JSON.stringify({ success: 0 });
+                _d.label = 3;
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 //# sourceMappingURL=course.js.map

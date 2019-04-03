@@ -15,6 +15,11 @@ const routes: IRoute[] = [
     controller: Controller.Course.list,
   },
   {
+    method: 'post',
+    path: '/api/course/:courseId/register',
+    controller: Controller.Course.register,
+  },
+  {
     method: 'get',
     path: '/api/assignment/list',
     controller: Controller.Assignment.listByUser,

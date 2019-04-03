@@ -57,14 +57,24 @@ export default new Vuex.Store({
   },
   mutations: {
     setAssignmentList(state, assignments: IAssignment[]) {
+      assignments.sort((a, b) => +new Date(a.deadline) - +new Date(b.deadline));
       assignments.forEach(a => {
         const d = new Date(a.deadline);
         a.deadlineStr = utils.dateFormat(d, 'YYYY-MM-DD HH:mm:SS');
+        if (a.submission.submitTime) {
+          const s = new Date(a.submission.submitTime);
+          a.submission.submitTimeStr = utils.dateFormat(s, 'YYYY-MM-DD HH:mm:SS');
+        }
       });
       state.assignments = assignments;
     },
     setCourseList(state, courses: ICourse[]) {
       state.courses = courses;
+    },
+    setCourseRegistered(state, courseId: number) {
+      const c = state.courses.find(c => c.id === courseId);
+      if (!c) return;
+      c.registered = true;
     },
     setLogin(state, login: boolean) {
       state.isLogin = login;
@@ -116,6 +126,14 @@ export default new Vuex.Store({
       const res = await api.course.list(offset);
       if (res.data.success === 1) {
         commit('setCourseList', res.data.courses);
+      }
+      return res.data;
+    },
+    async registerCourse({ commit, dispatch }, { courseId }: { courseId: number }) {
+      const res = await api.course.register(courseId);
+      if (res.data.success === 1) {
+        commit('setCourseRegistered', courseId);
+        dispatch('getAssignmentListByUser');
       }
       return res.data;
     },

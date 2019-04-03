@@ -13,6 +13,7 @@ export function createApi() {
     course: {
       list: (offset: number) => conn.get(`/course/list/${offset}`),
       getAssignments: (courseId: number) => conn.get(`/course/${courseId}/assignments`),
+      register: (courseId: number) => conn.post(`/course/${courseId}/register`),
     },
     user: {
       me: () => conn.get('/user/me'),
