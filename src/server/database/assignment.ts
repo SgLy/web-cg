@@ -34,11 +34,11 @@ export async function submit(userId: number, workId: number, assignmentId: numbe
 export async function listByUser(userId: number) {
   const result: any[] = await query(`
     SELECT
-      id AS assignment_id,
-      course_id,
-      name AS assignment_name,
-      description AS assignment_description,
-      deadline
+      assignment.*,
+      course.id AS course_id,
+      course.name AS course_name,
+      course.description AS course_description,
+      course.teacher AS course_teacher
     FROM assignment
     RIGHT JOIN (
       SELECT course_id FROM course_reg
@@ -51,15 +51,15 @@ export async function listByUser(userId: number) {
   return {
     success: 1,
     assignments: result.map(r => ({
-      id: r.assignment_id,
-      name: r.assignment_name,
+      id: r.id,
+      name: r.name,
       deadline: r.deadline,
-      description: r.assignment_description,
+      description: r.description,
       course: {
         id: r.course_id,
-        name: r.name,
-        description: r.description,
-        teacher: r.teacher,
+        name: r.course_name,
+        description: r.course_description,
+        teacher: r.course_teacher,
       },
     })),
   };

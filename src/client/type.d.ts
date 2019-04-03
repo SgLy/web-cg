@@ -29,10 +29,11 @@ interface ICourseTA {
 
 interface IAssignment {
   id: number;
-  course_id: number;
   name: string;
   deadline: number;
+  deadlineStr: string;
   description: string;
+  course: ICourse;
 }
 
 interface ISubmission {

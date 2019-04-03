@@ -10,7 +10,7 @@
         <Course />
       </el-tab-pane>
       <el-tab-pane label="作业">
-        <div>作业</div>
+        <Assignment />
       </el-tab-pane>
       <el-tab-pane label="设置">
         <div>设置</div>
@@ -23,11 +23,13 @@
   import Vue from 'vue';
   import { mapActions, mapGetters } from 'vuex';
   import Course from './Course.vue';
+  import Assignment from './Assignment.vue';
 
   export default Vue.extend({
     name: 'Dashboard',
     components: {
       Course,
+      Assignment,
     },
     props: {
       height: String,

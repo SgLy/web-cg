@@ -1,6 +1,6 @@
 import VueRouter from 'vue-router';
-import Workspace from './Workspace.vue';
-import Dashboard from './Dashboard.vue';
+import Workspace from './views/Workspace.vue';
+import Dashboard from './views/Dashboard.vue';
 
 export default new VueRouter({
   mode: 'history',

@@ -92,21 +92,21 @@ function listByUser(userId) {
         var result;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, index_1.query("\n    SELECT\n      id AS assignment_id,\n      course_id,\n      name AS assignment_name,\n      description AS assignment_description,\n      deadline\n    FROM assignment\n    RIGHT JOIN (\n      SELECT course_id FROM course_reg\n      WHERE user_id = ?\n    ) AS my_course\n    ON my_course.course_id = assignment.course_id\n    LEFT JOIN course\n    ON course.id = assignment.course_id", [userId])];
+                case 0: return [4 /*yield*/, index_1.query("\n    SELECT\n      assignment.*,\n      course.id AS course_id,\n      course.name AS course_name,\n      course.description AS course_description,\n      course.teacher AS course_teacher\n    FROM assignment\n    RIGHT JOIN (\n      SELECT course_id FROM course_reg\n      WHERE user_id = ?\n    ) AS my_course\n    ON my_course.course_id = assignment.course_id\n    LEFT JOIN course\n    ON course.id = assignment.course_id", [userId])];
                 case 1:
                     result = _a.sent();
                     return [2 /*return*/, {
                             success: 1,
                             assignments: result.map(function (r) { return ({
-                                id: r.assignment_id,
-                                name: r.assignment_name,
+                                id: r.id,
+                                name: r.name,
                                 deadline: r.deadline,
-                                description: r.assignment_description,
+                                description: r.description,
                                 course: {
                                     id: r.course_id,
-                                    name: r.name,
-                                    description: r.description,
-                                    teacher: r.teacher,
+                                    name: r.course_name,
+                                    description: r.course_description,
+                                    teacher: r.course_teacher,
                                 },
                             }); }),
                         }];

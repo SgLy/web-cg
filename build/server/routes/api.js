@@ -8,6 +8,16 @@ var routes = [
         controller: Controller.Course.list,
     },
     {
+        method: 'get',
+        path: '/api/assignment/list',
+        controller: Controller.Assignment.listByUser,
+    },
+    {
+        method: 'get',
+        path: '/api/course/:courseId/assignments',
+        controller: Controller.Assignment.listByCourse,
+    },
+    {
         method: 'post',
         path: '/api/user/login',
         controller: Controller.User.login,

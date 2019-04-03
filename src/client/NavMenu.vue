@@ -23,7 +23,7 @@
 <script lang="ts">
   import Vue from 'vue';
   import { mapGetters } from 'vuex';
-  import UserPopover from './components/UserPopover.vue';
+  import UserPopover from './views/components/UserPopover.vue';
 
   export default Vue.extend({
     components: {

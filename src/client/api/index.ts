@@ -7,8 +7,12 @@ export function createApi() {
     withCredentials: true,
   });
   return {
+    assignment: {
+      listByUser: () => conn.get('/assignment/list'),
+    },
     course: {
       list: (offset: number) => conn.get(`/course/list/${offset}`),
+      getAssignments: (courseId: number) => conn.get(`/course/${courseId}/assignments`),
     },
     user: {
       me: () => conn.get('/user/me'),

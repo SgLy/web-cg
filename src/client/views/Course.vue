@@ -35,9 +35,7 @@
   export default Vue.extend({
     name: 'Course',
     async mounted() {
-      await this.getCourseList({
-        offset: 0,
-      });
+      await this.getCourseList({ offset: 0 });
     },
     computed: {
       ...mapGetters([ 'courses' ]),

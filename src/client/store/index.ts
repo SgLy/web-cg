@@ -2,6 +2,7 @@ import Vuex from 'vuex';
 import * as isUUID from 'is-uuid';
 import { createApi } from '../api';
 import * as monaco from 'monaco-editor';
+import utils from '../utils';
 
 const api = createApi();
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     isLogin: sidExists(),
 
     courses: [] as ICourse[],
+    assignments: [] as IAssignment[],
 
     codes: [] as ICode[],
     workId: 0,
@@ -40,6 +42,7 @@ export default new Vuex.Store({
     userId: state => state.user.id,
     workId: state => state.workId,
     courses: state => state.courses,
+    assignments: state => state.assignments,
     workList: state => state.workList,
     filenames(state) {
       return state.codes.map(c => c.filename);
@@ -53,6 +56,13 @@ export default new Vuex.Store({
     },
   },
   mutations: {
+    setAssignmentList(state, assignments: IAssignment[]) {
+      assignments.forEach(a => {
+        const d = new Date(a.deadline);
+        a.deadlineStr = utils.dateFormat(d, 'YYYY-MM-DD HH:mm:SS');
+      });
+      state.assignments = assignments;
+    },
     setCourseList(state, courses: ICourse[]) {
       state.courses = courses;
     },
@@ -95,6 +105,13 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    async getAssignmentListByUser({ commit }) {
+      const res = await api.assignment.listByUser();
+      if (res.data.success === 1) {
+        commit('setAssignmentList', res.data.assignments);
+      }
+      return res.data;
+    },
     async getCourseList({ commit }, { offset }: { offset: number }) {
       const res = await api.course.list(offset);
       if (res.data.success === 1) {
@@ -102,10 +119,13 @@ export default new Vuex.Store({
       }
       return res.data;
     },
-    async getUserInfo({ commit }) {
+    async getUserInfo({ commit, dispatch }) {
       const res = await api.user.me();
       if (res.data.success === 1) {
         commit('setUser', res.data);
+        dispatch('getWorkList');
+        dispatch('getCourseList', { offset: 0 });
+        dispatch('getAssignmentListByUser');
       } else {
         commit('setLogin', false);
       }
@@ -118,6 +138,7 @@ export default new Vuex.Store({
         dispatch('getWorkList');
         dispatch('getUserInfo');
         dispatch('getCourseList', { offset: 0 });
+        dispatch('getAssignmentListByUser');
       }
       return res;
     },
@@ -128,6 +149,7 @@ export default new Vuex.Store({
         commit('setUser', res.data);
         dispatch('getWorkList');
         dispatch('getCourseList', { offset: 0 });
+        dispatch('getAssignmentListByUser');
       }
       return res;
     },

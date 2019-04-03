@@ -31,11 +31,11 @@
 <script lang="ts">
   import Vue from 'vue';
   import * as monaco from 'monaco-editor';
-  import {createApi} from './api';
-  import utils from './utils';
+  import {createApi} from '../../api';
+  import utils from '../../utils';
   import { mapMutations, mapActions, mapGetters } from 'vuex';
-  import NewFileDialog from './components/NewFileDialog.vue';
-  import DeleteFileDialog from './components/DeleteFileDialog.vue';
+  import NewFileDialog from './NewFileDialog.vue';
+  import DeleteFileDialog from './DeleteFileDialog.vue';
 
   const api = createApi();
 

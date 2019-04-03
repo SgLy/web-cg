@@ -9,14 +9,12 @@
   import Vue from 'vue';
   import axios from 'axios';
   import NavMenu from './NavMenu.vue';
-  import Workspace from './Workspace.vue';
   import { mapGetters } from 'vuex';
 
   export default Vue.extend({
     name: 'App',
     components: {
       NavMenu,
-      Workspace,
     },
     computed: {
       ...mapGetters([ 'isLogin' ]),
