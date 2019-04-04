@@ -11,6 +11,26 @@ const getScript = async (workId: number, entry: string) => {
   const JSs = work.codes.filter(
     c => c.type === 'javascript' && c.filename !== entry,
   );
+  const listeners = `
+    const addOnResizeListener = listener => {
+      window.addEventListener('resize', () => {
+        listener();
+      });
+    };
+    const addOnKeyPressedListener = (key, listener) => {
+      window.addEventListener('keypress', e => {
+        if (e.key === key.toLowerCase()) listener();
+      });
+    };
+    const addMouseMoveListener = listener => {
+      window.addEventListener('mousemove', e => {
+        listener({
+          x: e.movementX,
+          y: e.movementY,
+        });
+      });
+    };
+  `;
   const requireCode = `const require = (() => {
     const cache = {};
     return (filename) => {${
@@ -28,8 +48,8 @@ const getScript = async (workId: number, entry: string) => {
   })()`;
   const GLSLs = work.codes.filter(c => c.type === 'glsl');
   const glCode = `
-    const canvas = document.getElementById('canvas');
-    const gl = canvas.getContext('webgl2');
+    const gl = document.getElementById('canvas').getContext('webgl2');
+    document.getElementById('canvas').requestPointerLock();
   `;
   const GLSLcode = `const requireGLSL = (filename) => {${
     GLSLs.map(c => `
@@ -39,21 +59,73 @@ const getScript = async (workId: number, entry: string) => {
   }`;
   const loopCode = `
     (() => {
-      const loop = () => {
-        if (mainLoop) mainLoop();
-        window.requestAnimationFrame(loop);
+      let lastTime = 0;
+      const loop = time => {
+        if (mainLoop) mainLoop(time);
+        // if (time !== 0) 1000 / (time - lastTime);
+        lastTime = time;
+        requestAnimationFrame(loop);
       }
-      try { loop(); } catch (e) {
-        console.error('错误：未定义绘图循环函数 mainLoop');
+      try { loop(0); } catch (e) {
+        console.log(e);
       }
     })();
   `;
+  const userCode = work.codes.find(c => c.filename === entry)!.content;
+  const shadowedGlobals = [
+    'window',
+    'document',
+    'top',
+    'parent',
+    'frames',
+    'location',
+    'self',
+    'customElements',
+    'history',
+    'locationbar',
+    'menubar',
+    'personalbar',
+    'scrollbars',
+    'statusbar',
+    'toolbar',
+    'navigator',
+    'origin',
+    'screen',
+    'innerHeight',
+    'innerWidth',
+    'visualViewport',
+    'screenX',
+    'screenY',
+    'screenLeft',
+    'screenTop',
+    'outerWidth',
+    'outerHeight',
+    'devicePixelRatio',
+    'clientInformation',
+    'styleMedia',
+    'isSecureContext',
+    'performance',
+    'crypto',
+    'indexedDB',
+    'webkitStorageInfo',
+    'sessionStorage',
+    'localStorage',
+    'chrome',
+    'speechSynthesis',
+    'applicationCache',
+    'caches',
+  ];
+  const wrapped = `
+  (function (requestAnimationFrame, ${shadowedGlobals.join(', ')}) {
+      ${[userCode, loopCode].join('\n')}
+    }).bind({})(window.requestAnimationFrame);
+  `;
   return [
+    listeners,
     glCode,
     requireCode,
     GLSLcode,
-    work.codes.find(c => c.filename === entry)!.content,
-    loopCode,
+    wrapped,
   ].join('\n');
 };
 

@@ -41,7 +41,7 @@ var fs_1 = require("fs");
 var path = require("path");
 var htmlTemplate = fs_1.readFileSync(path.join(__dirname, 'template.html')).toString();
 var getScript = function (workId, entry) { return __awaiter(_this, void 0, void 0, function () {
-    var work, JSs, requireCode, GLSLs, glCode, GLSLcode, loopCode;
+    var work, JSs, listeners, requireCode, GLSLs, glCode, GLSLcode, loopCode, userCode, shadowedGlobals, wrapped;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, database_1.default.Work.getWork(workId)];
@@ -50,17 +50,63 @@ var getScript = function (workId, entry) { return __awaiter(_this, void 0, void 
                 if (work === undefined)
                     return [2 /*return*/, ''];
                 JSs = work.codes.filter(function (c) { return c.type === 'javascript' && c.filename !== entry; });
+                listeners = "\n    const addOnResizeListener = listener => {\n      window.addEventListener('resize', () => {\n        listener();\n      });\n    };\n    const addOnKeyPressedListener = (key, listener) => {\n      window.addEventListener('keypress', e => {\n        if (e.key === key.toLowerCase()) listener();\n      });\n    };\n    const addMouseMoveListener = listener => {\n      window.addEventListener('mousemove', e => {\n        listener({\n          x: e.movementX,\n          y: e.movementY,\n        });\n      });\n    };\n  ";
                 requireCode = "const require = (() => {\n    const cache = {};\n    return (filename) => {" + JSs.map(function (c) { return "\n        if (filename === '" + c.filename + "') {\n          if (cache['" + c.filename + "']) return cache['" + c.filename + "'];\n          const module = {};\n          (() => { " + c.content + " })();\n          cache['" + c.filename + "'] = module.exports;\n          return cache['" + c.filename + "'];\n        }\n      "; }).join('') + "\n      return undefined;\n    };\n  })()";
                 GLSLs = work.codes.filter(function (c) { return c.type === 'glsl'; });
-                glCode = "\n    const canvas = document.getElementById('canvas');\n    const gl = canvas.getContext('webgl2');\n  ";
+                glCode = "\n    const gl = document.getElementById('canvas').getContext('webgl2');\n    document.getElementById('canvas').requestPointerLock();\n  ";
                 GLSLcode = "const requireGLSL = (filename) => {" + GLSLs.map(function (c) { return "\n      if (filename === '" + c.filename + "') return `" + c.content + "`;\n    "; }).join('') + "\n    return '';\n  }";
-                loopCode = "\n    (() => {\n      const loop = () => {\n        if (mainLoop) mainLoop();\n        window.requestAnimationFrame(loop);\n      }\n      try { loop(); } catch (e) {\n        console.error('\u9519\u8BEF\uFF1A\u672A\u5B9A\u4E49\u7ED8\u56FE\u5FAA\u73AF\u51FD\u6570 mainLoop');\n      }\n    })();\n  ";
+                loopCode = "\n    (() => {\n      let lastTime = 0;\n      const loop = time => {\n        if (mainLoop) mainLoop(time);\n        // if (time !== 0) 1000 / (time - lastTime);\n        lastTime = time;\n        requestAnimationFrame(loop);\n      }\n      try { loop(0); } catch (e) {\n        console.log(e);\n      }\n    })();\n  ";
+                userCode = work.codes.find(function (c) { return c.filename === entry; }).content;
+                shadowedGlobals = [
+                    'window',
+                    'document',
+                    'top',
+                    'parent',
+                    'frames',
+                    'location',
+                    'self',
+                    'customElements',
+                    'history',
+                    'locationbar',
+                    'menubar',
+                    'personalbar',
+                    'scrollbars',
+                    'statusbar',
+                    'toolbar',
+                    'navigator',
+                    'origin',
+                    'screen',
+                    'innerHeight',
+                    'innerWidth',
+                    'visualViewport',
+                    'screenX',
+                    'screenY',
+                    'screenLeft',
+                    'screenTop',
+                    'outerWidth',
+                    'outerHeight',
+                    'devicePixelRatio',
+                    'clientInformation',
+                    'styleMedia',
+                    'isSecureContext',
+                    'performance',
+                    'crypto',
+                    'indexedDB',
+                    'webkitStorageInfo',
+                    'sessionStorage',
+                    'localStorage',
+                    'chrome',
+                    'speechSynthesis',
+                    'applicationCache',
+                    'caches',
+                ];
+                wrapped = "\n  (function (requestAnimationFrame, " + shadowedGlobals.join(', ') + ") {\n      " + [userCode, loopCode].join('\n') + "\n    }).bind({})(window.requestAnimationFrame);\n  ";
                 return [2 /*return*/, [
+                        listeners,
                         glCode,
                         requireCode,
                         GLSLcode,
-                        work.codes.find(function (c) { return c.filename === entry; }).content,
-                        loopCode,
+                        wrapped,
                     ].join('\n')];
         }
     });
