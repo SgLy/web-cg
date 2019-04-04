@@ -54,6 +54,7 @@ export default new Vuex.Store({
       if (state.workId === 0) return 'about:blank';
       return `http://localhost:3000/api/work/${state.workId}/compiled`;
     },
+    iframeDomain: state => document.location.host === 'localhost:8000' ? 'http://localhost:3000' : 'http://cn.sgly.cf',
   },
   mutations: {
     setAssignmentList(state, assignments: IAssignment[]) {

@@ -1,3 +1,7 @@
+interface Window {
+  updateFPS: (fps: number) => void;
+}
+
 interface IUser {
   id: number;
   phone: string;

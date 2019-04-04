@@ -40,8 +40,9 @@ var database_1 = require("../database");
 var fs_1 = require("fs");
 var path = require("path");
 var htmlTemplate = fs_1.readFileSync(path.join(__dirname, 'template.html')).toString();
+var hostname = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'http://cn.sgly.cf';
 var getScript = function (workId, entry) { return __awaiter(_this, void 0, void 0, function () {
-    var work, JSs, listeners, requireCode, GLSLs, glCode, GLSLcode, loopCode, userCode, shadowedGlobals, wrapped;
+    var work, JSs, listeners, requireCode, GLSLs, glCode, GLSLcode, loopCode, userCode, communicationCode, shadowedGlobals, wrapped;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, database_1.default.Work.getWork(workId)];
@@ -53,10 +54,11 @@ var getScript = function (workId, entry) { return __awaiter(_this, void 0, void 
                 listeners = "\n    const addOnResizeListener = listener => {\n      window.addEventListener('resize', () => {\n        listener();\n      });\n    };\n    const addOnKeyPressedListener = (key, listener) => {\n      window.addEventListener('keypress', e => {\n        if (e.key === key.toLowerCase()) listener();\n      });\n    };\n    const addMouseMoveListener = listener => {\n      window.addEventListener('mousemove', e => {\n        listener({\n          x: e.movementX,\n          y: e.movementY,\n        });\n      });\n    };\n  ";
                 requireCode = "const require = (() => {\n    const cache = {};\n    return (filename) => {" + JSs.map(function (c) { return "\n        if (filename === '" + c.filename + "') {\n          if (cache['" + c.filename + "']) return cache['" + c.filename + "'];\n          const module = {};\n          (() => { " + c.content + " })();\n          cache['" + c.filename + "'] = module.exports;\n          return cache['" + c.filename + "'];\n        }\n      "; }).join('') + "\n      return undefined;\n    };\n  })()";
                 GLSLs = work.codes.filter(function (c) { return c.type === 'glsl'; });
-                glCode = "\n    const gl = document.getElementById('canvas').getContext('webgl2');\n    document.getElementById('canvas').requestPointerLock();\n  ";
+                glCode = "\n    const gl = document.getElementById('canvas').getContext('webgl2');\n  ";
                 GLSLcode = "const requireGLSL = (filename) => {" + GLSLs.map(function (c) { return "\n      if (filename === '" + c.filename + "') return `" + c.content + "`;\n    "; }).join('') + "\n    return '';\n  }";
-                loopCode = "\n    (() => {\n      let lastTime = 0;\n      const loop = time => {\n        if (mainLoop) mainLoop(time);\n        // if (time !== 0) 1000 / (time - lastTime);\n        lastTime = time;\n        requestAnimationFrame(loop);\n      }\n      try { loop(0); } catch (e) {\n        console.log(e);\n      }\n    })();\n  ";
+                loopCode = "\n    (() => {\n      let lastTime = 0;\n      const loop = time => {\n        if (mainLoop) mainLoop(time);\n        if (time !== 0) updateFPS(1000 / (time - lastTime));\n        lastTime = time;\n        requestAnimationFrame(loop);\n      }\n      try { loop(0); } catch (e) {\n        console.log(e);\n      }\n    })();\n  ";
                 userCode = work.codes.find(function (c) { return c.filename === entry; }).content;
+                communicationCode = "\n    const updateFPS = fps => {\n      parent.window.postMessage({\n        action: 'updateFPS',\n        data: {\n          fps,\n        },\n      }, '" + hostname + "');\n    };\n    window.addEventListener('message', e => {\n      if (e.data.action === 'lockMouse') {\n        document.getElementById('canvas').requestPointerLock();\n      }\n    }, false);\n    document.addEventListener('pointerlockchange', () => {\n      if (document.pointerLockElement === document.getElementById('canvas')) {\n        return;\n      }\n      parent.window.postMessage({\n        action: 'mouseUnlock',\n      }, '" + hostname + "');\n    }, false);\n    Object.keys(console).map(f => {\n      const func = console[f];\n      console[f] = function(...args) {\n        parent.window.postMessage({\n          action: 'console.' + f,\n          data: args,\n        }, '" + hostname + "');\n      };\n    });\n  ";
                 shadowedGlobals = [
                     'window',
                     'document',
@@ -100,12 +102,13 @@ var getScript = function (workId, entry) { return __awaiter(_this, void 0, void 
                     'applicationCache',
                     'caches',
                 ];
-                wrapped = "\n  (function (requestAnimationFrame, " + shadowedGlobals.join(', ') + ") {\n      " + [userCode, loopCode].join('\n') + "\n    }).bind({})(window.requestAnimationFrame);\n  ";
+                wrapped = "\n    (function (requestAnimationFrame, updateFPS, " + shadowedGlobals.join(', ') + ") {\n      " + [userCode, loopCode].join('\n') + "\n    }).bind({})(window.requestAnimationFrame, updateFPS);\n  ";
                 return [2 /*return*/, [
                         listeners,
                         glCode,
                         requireCode,
                         GLSLcode,
+                        communicationCode,
                         wrapped,
                     ].join('\n')];
         }

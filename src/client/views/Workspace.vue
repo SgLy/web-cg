@@ -14,7 +14,28 @@
         <Editor />
       </el-tab-pane>
       <el-tab-pane label="输出">
-        <iframe id="canvas" :src="compiledSrc"></iframe>
+        <el-row :gutter="20">
+          <el-col :span="16">
+            <el-card shadow="hover">
+              <div class="title">渲染结果</div>
+              <iframe id="canvas" :src="compiledSrc" :style="{ pointerEvents: mouseLocked ? 'all' : 'none' }"></iframe>
+            </el-card>
+          </el-col>
+          <el-col :span="8">
+            <el-card shadow="hover">
+              <div class="title">控制面板</div>
+              <div style="margin-bottom: 10px;">
+                <el-button @click="reloadIframe">重新载入</el-button>
+                <el-button @click="lockMouse">捕获鼠标</el-button>
+              </div>
+              <div class="text"><span class="subtitle">每秒渲染帧数：</span><code>{{ fps }}</code></div>
+            </el-card>
+            <el-card shadow="hover" :style="{ marginTop: 20 }">
+              <div class="title">调试信息</div>
+              <div class="console"><pre><code>{{ iframeConsole.join('\n') }}</code></pre></div>
+            </el-card>
+          </el-col>
+        </el-row>
       </el-tab-pane>
     </el-tabs>
   </LoginGuard>
@@ -26,6 +47,7 @@
   import ChooseWorkDialog from './components/ChooseWorkDialog.vue';
   import LoginGuard from './components/LoginGuard.vue';
   import { mapActions, mapGetters } from 'vuex';
+  import utils from '../utils';
 
   export default Vue.extend({
     name: 'Workspace',
@@ -37,8 +59,15 @@
       ChooseWorkDialog,
       LoginGuard,
     },
+    data() {
+      return {
+        fps: 0,
+        mouseLocked: false,
+        iframeConsole: [],
+      };
+    },
     computed: {
-      ...mapGetters([ 'workId', 'userId', 'compiledSrc' ]),
+      ...mapGetters([ 'workId', 'userId', 'compiledSrc', 'iframeDomain' ]),
     },
     async mounted() {
       const workId = this.$route.params.workId as number;
@@ -47,13 +76,48 @@
       } else {
         await this.getWorkList();
       }
+
+      // iframe communicating, also check out ./src/server/controller/core.ts
+      window.addEventListener('message', e => {
+        if (typeof e.data.action !== 'string') return;
+        if (e.data.action === 'updateFPS') {
+          const fps = parseInt(e.data.data.fps, 10);
+          this.updateFPS(fps);
+          return;
+        }
+        if (e.data.action === 'mouseUnlock') {
+          this.mouseLocked = false;
+          return;
+        }
+        const m = e.data.action.match(/^console.([a-z]+)$/);
+        if (m) {
+          if (m[1] === 'assert' && e.data.data[0] === true) return;
+          this.iframeConsole.push(`[${m[1]}] ${e.data.data.join(' ')}`);
+        }
+      }, false);
     },
     methods: {
+      updateFPS: utils.throttle(500, function(fps) {
+        this.fps = fps;
+      }),
       onTabClick(tab) {
         if (parseInt(tab.index, 10) === 1) {
           const iframe = document.getElementById('canvas') as HTMLIFrameElement;
           iframe.src = iframe.src;
+          this.iframeConsole = [];
         }
+      },
+      reloadIframe() {
+        const iframe = document.getElementById('canvas') as HTMLIFrameElement;
+        iframe.src = iframe.src;
+        this.iframeConsole = [];
+      },
+      lockMouse() {
+        this.mouseLocked = true;
+        const iframe = document.getElementById('canvas') as HTMLIFrameElement;
+        iframe.contentWindow.postMessage({
+          action: 'lockMouse',
+        }, this.iframeDomain);
       },
       ...mapActions([ 'getWork', 'getWorkList' ]),
     },
@@ -63,7 +127,20 @@
 <style scoped>
 #canvas {
   border: none;
-  height: calc(100% - 30px);
+  height: calc(100% - 110px);
   width: 100%;
+}
+.title {
+  font-size: 14px;
+  line-height: 1.5em;
+  margin-bottom: 20px;
+}
+.text {
+  font-size: 14px;
+  line-height: 1.4em;
+}
+.subtitle {
+  font-size: 13px;
+  color: #999;
 }
 </style>

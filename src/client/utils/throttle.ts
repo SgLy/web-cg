@@ -4,6 +4,6 @@ export default function<T>(intervalMilliSeconds: number, func: (...args: any[]) 
     const current = Date.now();
     if (current - lastCall < intervalMilliSeconds) return;
     lastCall = current;
-    return func.call(this, args);
+    return func.call(this, ...args);
   };
 }

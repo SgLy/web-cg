@@ -5,6 +5,8 @@ import * as path from 'path';
 
 const htmlTemplate = readFileSync(path.join(__dirname, 'template.html')).toString();
 
+const hostname = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'http://cn.sgly.cf';
+
 const getScript = async (workId: number, entry: string) => {
   const work = await DB.Work.getWork(workId);
   if (work === undefined) return '';
@@ -49,7 +51,6 @@ const getScript = async (workId: number, entry: string) => {
   const GLSLs = work.codes.filter(c => c.type === 'glsl');
   const glCode = `
     const gl = document.getElementById('canvas').getContext('webgl2');
-    document.getElementById('canvas').requestPointerLock();
   `;
   const GLSLcode = `const requireGLSL = (filename) => {${
     GLSLs.map(c => `
@@ -62,7 +63,7 @@ const getScript = async (workId: number, entry: string) => {
       let lastTime = 0;
       const loop = time => {
         if (mainLoop) mainLoop(time);
-        // if (time !== 0) 1000 / (time - lastTime);
+        if (time !== 0) updateFPS(1000 / (time - lastTime));
         lastTime = time;
         requestAnimationFrame(loop);
       }
@@ -72,6 +73,38 @@ const getScript = async (workId: number, entry: string) => {
     })();
   `;
   const userCode = work.codes.find(c => c.filename === entry)!.content;
+  const communicationCode = `
+    const updateFPS = fps => {
+      parent.window.postMessage({
+        action: 'updateFPS',
+        data: {
+          fps,
+        },
+      }, '${hostname}');
+    };
+    window.addEventListener('message', e => {
+      if (e.data.action === 'lockMouse') {
+        document.getElementById('canvas').requestPointerLock();
+      }
+    }, false);
+    document.addEventListener('pointerlockchange', () => {
+      if (document.pointerLockElement === document.getElementById('canvas')) {
+        return;
+      }
+      parent.window.postMessage({
+        action: 'mouseUnlock',
+      }, '${hostname}');
+    }, false);
+    Object.keys(console).map(f => {
+      const func = console[f];
+      console[f] = function(...args) {
+        parent.window.postMessage({
+          action: 'console.' + f,
+          data: args,
+        }, '${hostname}');
+      };
+    });
+  `;
   const shadowedGlobals = [
     'window',
     'document',
@@ -116,15 +149,16 @@ const getScript = async (workId: number, entry: string) => {
     'caches',
   ];
   const wrapped = `
-  (function (requestAnimationFrame, ${shadowedGlobals.join(', ')}) {
+    (function (requestAnimationFrame, updateFPS, ${shadowedGlobals.join(', ')}) {
       ${[userCode, loopCode].join('\n')}
-    }).bind({})(window.requestAnimationFrame);
+    }).bind({})(window.requestAnimationFrame, updateFPS);
   `;
   return [
     listeners,
     glCode,
     requireCode,
     GLSLcode,
+    communicationCode,
     wrapped,
   ].join('\n');
 };
