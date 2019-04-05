@@ -1,8 +1,10 @@
+import Vue from 'vue';
 import Vuex from 'vuex';
 import * as isUUID from 'is-uuid';
 import { createApi } from '../api';
 import * as monaco from 'monaco-editor';
 import utils from '../utils';
+import * as crypto from 'crypto-js';
 
 const api = createApi();
 
@@ -44,12 +46,14 @@ export default new Vuex.Store({
     courses: state => state.courses,
     assignments: state => state.assignments,
     workList: state => state.workList,
-    filenames(state) {
-      return state.codes.map(c => c.filename);
+    files: state => {
+      console.log('test');
+      return state.codes.map(c => ({
+        filename: c.filename,
+        notSaved: c.notSaved,
+      }));
     },
-    currentFile(state) {
-      return state.currentCodeFilename;
-    },
+    currentFile: state => state.currentCodeFilename,
     compiledSrc: state => {
       if (state.workId === 0) return 'about:blank';
       return `http://localhost:3000/api/work/${state.workId}/compiled`;
@@ -90,7 +94,11 @@ export default new Vuex.Store({
     setWork(state, work: IWork) {
       state.workId = work.id;
       state.codes = work.codes;
-      state.models = work.codes. map(
+      state.codes.forEach(c => {
+        c.hash = crypto.SHA1(c.content).toString();
+        c.notSaved = false;
+      });
+      state.models = work.codes.map(
         c => monaco.editor.createModel(c.content, c.type),
       );
     },
@@ -112,7 +120,20 @@ export default new Vuex.Store({
       });
     },
     updateCode(state, { i, content }: { i: number, content: string }) {
-      state.codes[i].content = content;
+      const code = state.codes[i];
+      Vue.set(state.codes, i, {
+        content,
+        hash: crypto.SHA1(content).toString(),
+        id: code.id,
+        filename: code.filename,
+        type: code.type,
+        notSaved: true,
+      });
+    },
+    updateUnsaveState(state, { codeId, hash }: { codeId: number, hash: string }) {
+      const code = state.codes.find(c => c.id === codeId);
+      if (!code) return;
+      if (code.hash === hash) code.notSaved = false;
     },
   },
   actions: {
@@ -197,16 +218,23 @@ export default new Vuex.Store({
         content,
       });
     },
-    async modifyCode({ commit }, { codeId, content }: { codeId: number, content: string }) {
-      const res = await api.work.updateCode(codeId, content);
-      return res.data.success;
-    },
+    modifyCode: utils.debounce(1000,
+      async function({ commit }, { codeId, content }: { codeId: number, content: string }) {
+        const res = await api.work.updateCode(codeId, content);
+        commit('updateUnsaveState', {
+          codeId, hash: res.data.hash,
+        });
+        return res.data.success;
+      },
+    ),
     async addCode({ state, commit }, { filename, type }: { filename: string, type: string }) {
       const res = await api.work.addCode(state.workId, filename, type);
       state.codes.push({
         content: '',
         id: res.data.codeId,
         filename, type,
+        notSaved: false,
+        hash: crypto.SHA1('').toString(),
       });
       const model = monaco.editor.createModel('', type);
       state.models.push(model);

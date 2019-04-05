@@ -40,14 +40,14 @@
       };
     },
     computed: {
-      ...mapGetters([ 'filenames' ]),
+      ...mapGetters([ 'files' ]),
     },
     methods: {
       cancel() {
         this.$emit('close');
       },
       confirm() {
-        if (this.filenames.indexOf(this.filename) !== -1) {
+        if (this.files.findIndex(f => f.filename === this.filename) !== -1) {
           this.$message({
             message: `文件 ${this.filename} 已存在!`,
             type: 'warning',

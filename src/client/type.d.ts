@@ -67,4 +67,6 @@ interface ICode {
   filename: string;
   content: string;
   type: string;
+  notSaved: boolean;
+  hash: string;
 }

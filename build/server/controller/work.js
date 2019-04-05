@@ -48,6 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = require("../database");
+var crypto_js_1 = require("crypto-js");
 exports.getWork = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
     var work;
     return __generator(this, function (_a) {
@@ -61,15 +62,15 @@ exports.getWork = function (ctx, next) { return __awaiter(_this, void 0, void 0,
     });
 }); };
 exports.updateCodeContent = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
-    var _a, _b, _c;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
-            case 0:
-                _a = ctx;
-                _c = (_b = JSON).stringify;
-                return [4 /*yield*/, database_1.default.Work.updateCodeContent(ctx.params.codeId, ctx.request.body.content)];
+    var code;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, database_1.default.Work.updateCodeContent(ctx.params.codeId, ctx.request.body.content)];
             case 1:
-                _a.body = _c.apply(_b, [_d.sent()]);
+                code = _a.sent();
+                if (code.success === 1) {
+                    ctx.body = JSON.stringify(__assign({}, code, { hash: crypto_js_1.SHA1(ctx.request.body.content).toString() }));
+                }
                 return [2 /*return*/];
         }
     });

@@ -1,5 +1,6 @@
 import DB from '../database';
 import { IMiddleware } from 'koa-router';
+import { SHA1 } from 'crypto-js';
 
 export const getWork: IMiddleware = async (ctx, next) => {
   const work = await DB.Work.getWork(ctx.params.workId);
@@ -10,9 +11,15 @@ export const getWork: IMiddleware = async (ctx, next) => {
 };
 
 export const updateCodeContent: IMiddleware = async (ctx, next) => {
-  ctx.body = JSON.stringify(await DB.Work.updateCodeContent(
+  const code = await DB.Work.updateCodeContent(
     ctx.params.codeId, ctx.request.body.content,
-  ));
+  );
+  if (code.success === 1) {
+    ctx.body = JSON.stringify({
+      ...code,
+      hash: SHA1(ctx.request.body.content).toString(),
+    });
+  }
 };
 
 export const addCode: IMiddleware = async (ctx, next) => {

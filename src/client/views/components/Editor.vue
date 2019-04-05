@@ -7,10 +7,10 @@
       @tab-click="onTabClick"
     >
       <ElTabPane
-        v-for="item in filenames"
-        :key="item"
-        :label="item+'<b>l</b>'"
-        :name="item"
+        v-for="item in files"
+        :key="item.filename"
+        :label="item.filename + (item.notSaved ? ' *' : '')"
+        :name="item.filename"
       />
     </ElTabs>
     <NewFileDialog
@@ -52,19 +52,19 @@
       };
     },
     computed: {
-      ...mapGetters([ 'filenames', 'currentFile' ]),
+      ...mapGetters([ 'files', 'currentFile' ]),
     },
     async mounted() {
       this.initEditor(document.getElementById('editor'));
       const editor = this.$store.state.editor;
-      const onEditorChange = utils.debounce(1000, e => {
+      editor.onDidChangeModelContent(e => {
         this.editorOnChange({ content: editor.getValue() });
       });
-      editor.onDidChangeModelContent(onEditorChange);
     },
     methods: {
       onTabClick(e) {
-        this.switchCode(this.filenames.indexOf(e.paneName));
+        const i = this.files.findIndex(f => f.filename === e.paneName);
+        this.switchCode(i);
       },
       onFileChange(targetName, action) {
         if (action === 'add') {

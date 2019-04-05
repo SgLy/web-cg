@@ -25,6 +25,7 @@
     ],
     "object-literal-sort-keys": false,
     "ordered-imports": false,
+    "only-arrow-functions": false,
     "no-shadowed-variable": false,
     "no-empty-interface": true,
     "no-parameter-reassignment": true,
