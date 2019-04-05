@@ -1,18 +1,18 @@
 <template>
   <div>
-    <el-tabs
+    <ElTabs
       editable
       :value="currentFile"
       @edit="onFileChange"
       @tab-click="onTabClick"
     >
-      <el-tab-pane
+      <ElTabPane
         v-for="item in filenames"
         :key="item"
-        :label="item"
+        :label="item+'<b>l</b>'"
         :name="item"
       />
-    </el-tabs>
+    </ElTabs>
     <NewFileDialog
       :visible="newFileDialogVisible"
       @close="onNewFileDialogClose"

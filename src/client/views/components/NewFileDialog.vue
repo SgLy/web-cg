@@ -1,28 +1,28 @@
 <template>
-  <el-dialog
+  <ElDialog
     title="新建文件"
     :visible="visible"
     :before-close="onClose"
     width="50%"
   >
     <span>
-      <el-form ref="form" label-width="80px">
-        <el-form-item label="文件名">
-          <el-input v-model="filename"></el-input>
-        </el-form-item>
-        <el-form-item label="文件类型">
-          <el-select v-model="type" placeholder="请选择文件类型">
-            <el-option label="JavaScript" value="javascript"></el-option>
-            <el-option label="OpenGL Shading Language" value="glsl"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
+      <ElForm ref="form" label-width="80px">
+        <ElFormItem label="文件名">
+          <ElInput v-model="filename"></ElInput>
+        </ElFormItem>
+        <ElFormItem label="文件类型">
+          <ElSelect v-model="type" placeholder="请选择文件类型">
+            <ElOption label="JavaScript" value="javascript"></ElOption>
+            <ElOption label="OpenGL Shading Language" value="glsl"></ElOption>
+          </ElSelect>
+        </ElFormItem>
+      </ElForm>
     </span>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="cancel">取消</el-button>
-      <el-button type="primary" @click="confirm">确定</el-button>
+      <ElButton @click="cancel">取消</ElButton>
+      <ElButton type="primary" @click="confirm">确定</ElButton>
     </span>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script lang="ts">

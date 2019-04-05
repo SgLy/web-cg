@@ -1,30 +1,30 @@
 <template>
   <LoginGuard>
-    <el-card shadow="hover" class="card"
+    <ElCard shadow="hover" class="card"
       v-for="assignment in assignments" :key="assignment.id">
       <div slot="header">
         <span>{{ assignment.name }}</span>
-        <el-button
+        <ElButton
           v-if="assignment.submission.submitTime"
           class="right"
           type="text green"
-        >已提交</el-button>
-        <el-button
+        >已提交</ElButton>
+        <ElButton
           v-else-if="passed(assignment.deadline)"
           class="right red"
           type="text"
-        >已过期</el-button>
-        <el-button
+        >已过期</ElButton>
+        <ElButton
           v-else
           class="right"
           type="text"
-        >提交作业</el-button>
+        >提交作业</ElButton>
       </div>
       <div class="text"><span class="subtitle">截止时间：</span>{{ assignment.deadlineStr }}（{{ compareNow(assignment.deadline) }}）</div>
       <div class="text"><span class="subtitle">提交时间：</span>{{ assignment.submission.submitTimeStr || '未提交' }}</div>
       <div class="text"><span class="subtitle">课程：</span>{{ assignment.course.name }}</div>
       <div class="text">{{ assignment.description }}</div>
-    </el-card>
+    </ElCard>
   </LoginGuard>
 </template>
 

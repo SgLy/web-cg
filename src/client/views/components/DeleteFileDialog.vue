@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <ElDialog
     title="删除文件"
     :visible="visible"
     :before-close="onClose"
@@ -7,10 +7,10 @@
   >
     <span>确定要删除文件<b><code> {{ filename }} </code></b>吗？删除后，代码将不能再恢复。</span>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="cancel">取消</el-button>
-      <el-button type="primary" @click="confirm">确定</el-button>
+      <ElButton @click="cancel">取消</ElButton>
+      <ElButton type="primary" @click="confirm">确定</ElButton>
     </span>
-  </el-dialog>
+  </ElDialog>
 </template>
 
 <script lang="ts">

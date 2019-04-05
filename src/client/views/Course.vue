@@ -1,42 +1,42 @@
 <template>
   <div>
-    <el-row :gutter="20">
-      <el-col :span="12"
+    <ElRow :gutter="20">
+      <ElCol :span="12"
         v-for="course in courses"
         :key="course.id"
       >
-        <el-card shadow="hover" class="card">
+        <ElCard shadow="hover" class="card">
           <div slot="header">
             <span>{{ course.name }}</span>
-            <el-button
+            <ElButton
               v-if="isLogin && !course.registered"
               @click="onClick(course)"
               class="right"
               type="text"
-            >参加该课程</el-button>
-            <el-button
+            >参加该课程</ElButton>
+            <ElButton
               v-else-if="isLogin"
               class="right"
               type="text"
               disabled
-            >已参加</el-button>
+            >已参加</ElButton>
           </div>
           <div class="text"><span class="subtitle">任课教师：</span>{{ course.teacher }}</div>
           <div class="text">{{ course.description }}</div>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-dialog
+        </ElCard>
+      </ElCol>
+    </ElRow>
+    <ElDialog
       title="参加课程"
       :visible="registerDialogVisible"
       width="50%"
     >
       <span>确定要参加课程<b> {{ course.name }} </b>吗？</span>
       <span slot="footer" class="dialog-footer">
-        <el-button :disabled="loading" @click="onCancel">取消</el-button>
-        <el-button :loading="loading" type="primary" @click="onConfirm">确定</el-button>
+        <ElButton :disabled="loading" @click="onCancel">取消</ElButton>
+        <ElButton :loading="loading" type="primary" @click="onConfirm">确定</ElButton>
       </span>
-    </el-dialog>
+    </ElDialog>
   </div>
 </template>
 

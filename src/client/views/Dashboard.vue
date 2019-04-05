@@ -1,21 +1,21 @@
 <template>
   <div>
-   <el-tabs
+   <ElTabs
       type="border-card"
       id="dashboard"
       tabPosition="left"
       :style="{ height: this.height }"
     >
-      <el-tab-pane label="课程">
+      <ElTabPane label="课程">
         <Course />
-      </el-tab-pane>
-      <el-tab-pane label="作业">
+      </ElTabPane>
+      <ElTabPane label="作业">
         <Assignment />
-      </el-tab-pane>
-      <el-tab-pane label="设置">
+      </ElTabPane>
+      <ElTabPane label="设置">
         <div>设置</div>
-      </el-tab-pane>
-    </el-tabs>
+      </ElTabPane>
+    </ElTabs>
   </div>
 </template>
 

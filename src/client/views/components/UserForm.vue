@@ -1,20 +1,20 @@
 <template>
   <div style="padding: 1em;">
-    <el-form ref="userForm" :model="user" label-width="70px" label-position="left" :rules="rule">
-      <el-form-item label="手机" prop="phone">
-        <el-input v-model="user.phone"></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="user.password"></el-input>
-      </el-form-item>
-      <el-form-item v-if="type === 'register'" label="确认密码" prop="confirm">
-        <el-input type="password" v-model="user.confirm"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onLogin">登录</el-button>
-        <el-button type="" @click="onRegister">注册</el-button>
-      </el-form-item>
-    </el-form>
+    <ElForm ref="userForm" :model="user" label-width="70px" label-position="left" :rules="rule">
+      <ElFormItem label="手机" prop="phone">
+        <ElInput v-model="user.phone"></ElInput>
+      </ElFormItem>
+      <ElFormItem label="密码" prop="password">
+        <ElInput type="password" v-model="user.password"></ElInput>
+      </ElFormItem>
+      <ElFormItem v-if="type === 'register'" label="确认密码" prop="confirm">
+        <ElInput type="password" v-model="user.confirm"></ElInput>
+      </ElFormItem>
+      <ElFormItem>
+        <ElButton type="primary" @click="onLogin">登录</ElButton>
+        <ElButton type="" @click="onRegister">注册</ElButton>
+      </ElFormItem>
+    </ElForm>
   </div>
 </template>
 

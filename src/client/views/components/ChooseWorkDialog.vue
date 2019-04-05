@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <ElDialog
     :visible="display"
     :show-close="false"
     :close-on-click-modal="false"
@@ -7,27 +7,27 @@
     title="欢迎来到工作区"
     width="70%"
   >
-    <el-form ref="form" label-width="200px">
-      <el-form-item label="新建一个项目，名称为：">
-        <el-input v-model="newWorkname" placeholder="请输入项目名称"></el-input>
-        <el-button type="primary" @click="onCreate">立即创建</el-button>
-      </el-form-item>
-    </el-form>
+    <ElForm ref="form" label-width="200px">
+      <ElFormItem label="新建一个项目，名称为：">
+        <ElInput v-model="newWorkname" placeholder="请输入项目名称"></ElInput>
+        <ElButton type="primary" @click="onCreate">立即创建</ElButton>
+      </ElFormItem>
+    </ElForm>
     <div class="or">或</div>
-    <el-form ref="form" label-width="200px">
-      <el-form-item label="打开一个已存在的项目：">
-        <el-select v-model="openWorkId" placeholder="请选择项目">
-          <el-option
+    <ElForm ref="form" label-width="200px">
+      <ElFormItem label="打开一个已存在的项目：">
+        <ElSelect v-model="openWorkId" placeholder="请选择项目">
+          <ElOption
             v-for="work in workList"
             :key="work.id"
             :label="work.name"
             :value="work.id"
-          ></el-option>
-        </el-select>
-        <el-button type="primary" @click="onOpen">立即打开</el-button>
-      </el-form-item>
-    </el-form>
-  </el-dialog>
+          ></ElOption>
+        </ElSelect>
+        <ElButton type="primary" @click="onOpen">立即打开</ElButton>
+      </ElFormItem>
+    </ElForm>
+  </ElDialog>
 </template>
 
 <script lang="ts">

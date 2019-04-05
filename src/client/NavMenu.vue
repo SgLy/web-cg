@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-menu
+    <ElMenu
       :default-active="$route.name"
       mode="horizontal"
       :router="true"
     >
-      <el-menu-item index="dashboard" :route="dashboardRoute">总览</el-menu-item>
-      <el-menu-item index="workspace" :route="workspaceRoute">工作区</el-menu-item>
-      <el-popover
+      <ElMenuItem index="dashboard" :route="dashboardRoute">总览</ElMenuItem>
+      <ElMenuItem index="workspace" :route="workspaceRoute">工作区</ElMenuItem>
+      <ElPopover
         placement="bottom-end"
         width="300"
         trigger="hover"
@@ -15,8 +15,8 @@
       >
         <UserPopover />
         <div slot="reference" id="right_item" index="-1">{{ isLogin ? userNickname : '登录' }}</div>
-      </el-popover>
-    </el-menu>
+      </ElPopover>
+    </ElMenu>
   </div>
 </template>
 

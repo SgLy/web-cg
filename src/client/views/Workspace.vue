@@ -3,41 +3,41 @@
     <ChooseWorkDialog
       :display="workId === 0"
     />
-    <el-tabs
+    <ElTabs
       type="border-card"
       id="workspace"
       tabPosition="left"
       :style="{ height: this.height }"
       @tab-click="onTabClick"
     >
-      <el-tab-pane label="代码">
+      <ElTabPane label="代码">
         <Editor />
-      </el-tab-pane>
-      <el-tab-pane label="输出">
-        <el-row :gutter="20">
-          <el-col :span="16">
-            <el-card shadow="hover">
+      </ElTabPane>
+      <ElTabPane label="输出">
+        <ElRow :gutter="20">
+          <ElCol :span="16">
+            <ElCard shadow="hover">
               <div class="title">渲染结果</div>
               <iframe id="canvas" :src="compiledSrc" :style="{ pointerEvents: mouseLocked ? 'all' : 'none' }"></iframe>
-            </el-card>
-          </el-col>
-          <el-col :span="8">
-            <el-card shadow="hover">
+            </ElCard>
+          </ElCol>
+          <ElCol :span="8">
+            <ElCard shadow="hover">
               <div class="title">控制面板</div>
               <div style="margin-bottom: 10px;">
-                <el-button @click="reloadIframe">重新载入</el-button>
-                <el-button @click="lockMouse">捕获鼠标</el-button>
+                <ElButton @click="reloadIframe">重新载入</ElButton>
+                <ElButton @click="lockMouse">捕获鼠标</ElButton>
               </div>
               <div class="text"><span class="subtitle">每秒渲染帧数：</span><code>{{ fps }}</code></div>
-            </el-card>
-            <el-card shadow="hover" :style="{ marginTop: 20 }">
+            </ElCard>
+            <ElCard shadow="hover" :style="{ marginTop: 20 }">
               <div class="title">调试信息</div>
               <div class="console"><pre><code>{{ iframeConsole.join('\n') }}</code></pre></div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-tab-pane>
-    </el-tabs>
+            </ElCard>
+          </ElCol>
+        </ElRow>
+      </ElTabPane>
+    </ElTabs>
   </LoginGuard>
 </template>
 
