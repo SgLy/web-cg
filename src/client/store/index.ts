@@ -31,6 +31,7 @@ export default new Vuex.Store({
 
     codes: [] as ICode[],
     workId: 0,
+    workName: '',
     workList: [] as { name: string, id: number }[],
     currentCodeFilename: '',
     currentCodeIndex: 0,
@@ -46,13 +47,10 @@ export default new Vuex.Store({
     courses: state => state.courses,
     assignments: state => state.assignments,
     workList: state => state.workList,
-    files: state => {
-      console.log('test');
-      return state.codes.map(c => ({
-        filename: c.filename,
-        notSaved: c.notSaved,
-      }));
-    },
+    files: state => state.codes.map(c => ({
+      filename: c.filename,
+      notSaved: c.notSaved,
+    })),
     currentFile: state => state.currentCodeFilename,
     compiledSrc: state => {
       if (state.workId === 0) return 'about:blank';
@@ -92,6 +90,7 @@ export default new Vuex.Store({
       state.workId = workId;
     },
     setWork(state, work: IWork) {
+      state.workName = work.name;
       state.workId = work.id;
       state.codes = work.codes;
       state.codes.forEach(c => {
@@ -255,6 +254,18 @@ export default new Vuex.Store({
         }
       }
       return res.data.success;
+    },
+    async downloadRaw({ state }) {
+      const res = await api.work.downloadRaw(
+        state.workId,
+        `${state.user.nickname} - ${state.workName}.zip`,
+      );
+    },
+    async downloadCompiled({ state }) {
+      const res = await api.work.downloadCompiled(
+        state.workId,
+        `${state.user.nickname} - ${state.workName}.html`,
+      );
     },
   },
 });

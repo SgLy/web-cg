@@ -6,6 +6,23 @@ export function createApi() {
     baseURL: 'http://localhost:3000/api',
     withCredentials: true,
   });
+  const getFile = (url: string, filename: string) => {
+    return conn.request({
+      url,
+      method: 'get',
+      responseType: 'blob',
+    }).then(response => {
+      const url = window.URL.createObjectURL(
+        new Blob([response.data]),
+      );
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.removeChild(link);
+    });
+  };
   return {
     assignment: {
       listByUser: () => conn.get('/assignment/list'),
@@ -47,6 +64,12 @@ export function createApi() {
       newWork: (name: string) => {
         return conn.post('/work/new', { name });
       },
+      downloadRaw: (workId: number, filename: string) => getFile(
+        `/work/${workId}/raw`, filename,
+      ),
+      downloadCompiled: (workId: number, filename: string) => getFile(
+        `/work/${workId}/compiled`, filename,
+      ),
     },
   };
 }

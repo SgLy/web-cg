@@ -9,6 +9,7 @@ export async function getWork(id: number) {
   const ret = {
     id: works[0].id,
     userId: works[0].user_id,
+    name: works[0].name,
     public: works[0].public,
     codes: [] as {id: number, filename: string, content: string, type: string}[],
   };

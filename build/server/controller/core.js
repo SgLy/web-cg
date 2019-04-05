@@ -39,6 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var database_1 = require("../database");
 var fs_1 = require("fs");
 var path = require("path");
+var JSZip = require("jszip");
 var htmlTemplate = fs_1.readFileSync(path.join(__dirname, 'template.html')).toString();
 var hostname = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'http://cn.sgly.cf';
 var getScript = function (workId, entry) { return __awaiter(_this, void 0, void 0, function () {
@@ -122,6 +123,33 @@ exports.compiled = function (ctx, next) { return __awaiter(_this, void 0, void 0
             case 1:
                 src = _a.sent();
                 ctx.body = htmlTemplate.replace('{% script %}', src);
+                return [2 /*return*/];
+        }
+    });
+}); };
+exports.raw = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var work, zip, content;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, database_1.default.Work.getWork(ctx.params.workId)];
+            case 1:
+                work = _a.sent();
+                if (!work)
+                    return [2 /*return*/];
+                zip = new JSZip();
+                work.codes.forEach(function (c) {
+                    zip.file(c.filename, c.content);
+                });
+                return [4 /*yield*/, zip.generateAsync({
+                        type: 'nodebuffer',
+                        compression: 'DEFLATE',
+                        compressionOptions: {
+                            level: 9,
+                        },
+                    })];
+            case 2:
+                content = _a.sent();
+                ctx.body = content;
                 return [2 /*return*/];
         }
     });

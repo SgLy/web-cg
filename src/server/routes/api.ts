@@ -75,6 +75,11 @@ const routes: IRoute[] = [
     controller: Controller.Core.compiled,
   },
   {
+    method: 'get',
+    path: '/api/work/:workId/raw',
+    controller: Controller.Core.raw,
+  },
+  {
     method: 'post',
     path: '/api/work/new',
     controller: Controller.Work.newWork,

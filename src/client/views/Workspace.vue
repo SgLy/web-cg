@@ -37,6 +37,10 @@
           </ElCol>
         </ElRow>
       </ElTabPane>
+      <ElTabPane label="设置">
+        <ElButton @click="getRaw">下载打包代码</ElButton>
+        <ElButton @click="getCompiled">下载已编译代码</ElButton>
+      </ElTabPane>
     </ElTabs>
   </LoginGuard>
 </template>
@@ -119,7 +123,13 @@
           action: 'lockMouse',
         }, this.iframeDomain);
       },
-      ...mapActions([ 'getWork', 'getWorkList' ]),
+      async getRaw() {
+        await this.downloadRaw();
+      },
+      async getCompiled() {
+        await this.downloadCompiled();
+      },
+      ...mapActions([ 'getWork', 'getWorkList', 'downloadRaw', 'downloadCompiled' ]),
     },
   });
 </script>

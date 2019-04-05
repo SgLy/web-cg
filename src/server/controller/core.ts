@@ -2,6 +2,7 @@ import DB from '../database';
 import { IMiddleware } from 'koa-router';
 import { readFileSync } from 'fs';
 import * as path from 'path';
+import * as JSZip from 'jszip';
 
 const htmlTemplate = readFileSync(path.join(__dirname, 'template.html')).toString();
 
@@ -166,4 +167,21 @@ const getScript = async (workId: number, entry: string) => {
 export const compiled: IMiddleware = async (ctx, next) => {
   const src = await getScript(ctx.params.workId, 'index.js');
   ctx.body = htmlTemplate.replace('{% script %}', src);
+};
+
+export const raw: IMiddleware = async (ctx, next) => {
+  const work = await DB.Work.getWork(ctx.params.workId);
+  if (!work) return;
+  const zip = new JSZip();
+  work.codes.forEach(c => {
+    zip.file(c.filename, c.content);
+  });
+  const content = await zip.generateAsync({
+    type: 'nodebuffer',
+    compression: 'DEFLATE',
+    compressionOptions: {
+      level: 9,
+    },
+  });
+  ctx.body = content;
 };
