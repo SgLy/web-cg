@@ -89,4 +89,32 @@ exports.me = function (ctx, next) { return __awaiter(_this, void 0, void 0, func
         }
     });
 }); };
+exports.update = function (ctx, next) { return __awaiter(_this, void 0, void 0, function () {
+    var user, promises, results, ret;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, database_1.default.User.loginById(ctx.params.userId, ctx.request.body.originalPassword)];
+            case 1:
+                user = _a.sent();
+                if (user.success !== 1) {
+                    ctx.body = JSON.stringify({ success: 0 });
+                    return [2 /*return*/];
+                }
+                promises = [database_1.default.User.update(ctx.params.userId, ctx.request.body.studentId, ctx.request.body.nickname, ctx.request.body.realname, ctx.request.body.gender)];
+                if (ctx.request.body.password !== '') {
+                    promises.push(database_1.default.User.updatePassword(ctx.params.userId, ctx.request.body.password));
+                }
+                return [4 /*yield*/, Promise.all(promises)];
+            case 2:
+                results = _a.sent();
+                ret = {
+                    successInfo: results[0].success,
+                };
+                if (results.length > 1)
+                    ret.successPassword = results[1].success;
+                ctx.body = JSON.stringify(ret);
+                return [2 /*return*/];
+        }
+    });
+}); };
 //# sourceMappingURL=user.js.map

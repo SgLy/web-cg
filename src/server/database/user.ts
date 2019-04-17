@@ -25,6 +25,15 @@ export async function login(phone: string, password: string) {
   };
 }
 
+export async function loginById(id: number, password: string) {
+  const result = await query(
+    'SELECT * FROM user WHERE id = ? AND password = ?',
+    [id, password],
+  );
+  if (result.length !== 1) return { success: 0 };
+  return { success: 1 };
+}
+
 export async function register(phone: string, password: string) {
   const result = await query(`
     INSERT INTO user
@@ -38,4 +47,20 @@ export async function register(phone: string, password: string) {
     success: 1,
     id: result.insertId!,
   };
+}
+
+export async function update(id: number, studentId: string, nickname: string, realname: string, gender: number) {
+  const result = await query(`
+    UPDATE user
+    SET student_id = ?, nickname = ?, realname = ?, gender = ?
+    WHERE id = ?
+  `, [studentId, nickname, realname, gender, id]);
+  return { success: result.affectedRows !== 1 ? 0 : 1 };
+}
+
+export async function updatePassword(id: number, password: string) {
+  const result = await query(`
+    UPDATE user SET password = ? WHERE id = ?
+  `, [password, id]);
+  return { success: result.affectedRows !== 1 ? 0 : 1 };
 }

@@ -45,6 +45,15 @@ export function createApi() {
           phone, password: pwd,
         });
       },
+      update: (id: number, studentId: string, nickname: string, realname: string, gender: number, password: string, originalPassword: string) => {
+        const pwd = password === '' ? '' : crypto.SHA1(password).toString();
+        const oriPwd = crypto.SHA1(originalPassword).toString();
+        return conn.post(`/user/${id}/update`, {
+          studentId, nickname, realname, gender,
+          password: pwd,
+          originalPassword: oriPwd,
+        });
+      },
       register: (phone: string, password: string) => {
         const pwd = crypto.SHA1(password).toString();
         return conn.post('/user/register', {

@@ -41,6 +41,7 @@ export default new Vuex.Store({
   },
   getters: {
     isLogin: state => state.isLogin,
+    userInfo: state => state.user,
     userNickname: state => state.user.nickname,
     userId: state => state.user.id,
     workId: state => state.workId,
@@ -162,6 +163,17 @@ export default new Vuex.Store({
         commit('setCourseRegistered', courseId);
         dispatch('getAssignmentListByUser');
       }
+      return res.data;
+    },
+    async updateUserInfo({ dispatch, commit }, { id, originalPassword, password, student_id, nickname, realname, gender }: { id: number , originalPassword: string, password: string, student_id: string, nickname: string, realname: string, gender: string }) {
+      const genderNum = parseInt(gender, 10);
+      const res = await api.user.update(id, student_id, nickname, realname, genderNum, password, originalPassword);
+      (async () => {
+        const user = await api.user.me();
+        if (user.data.success === 1) {
+          commit('setUser', user.data);
+        }
+      })();
       return res.data;
     },
     async getUserInfo({ commit, dispatch }) {

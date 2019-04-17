@@ -43,6 +43,11 @@ var routes = [
         controller: Controller.User.me,
     },
     {
+        method: 'post',
+        path: '/api/user/:userId/update',
+        controller: Controller.User.update,
+    },
+    {
         method: 'get',
         path: '/api/work/list',
         controller: Controller.Work.getWorkList,

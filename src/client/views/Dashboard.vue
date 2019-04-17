@@ -13,7 +13,7 @@
         <Assignment />
       </ElTabPane>
       <ElTabPane label="设置">
-        <div>设置</div>
+        <PersonalSetting />
       </ElTabPane>
     </ElTabs>
   </div>
@@ -24,12 +24,14 @@
   import { mapActions, mapGetters } from 'vuex';
   import Course from './Course.vue';
   import Assignment from './Assignment.vue';
+  import PersonalSetting from './PersonalSetting.vue';
 
   export default Vue.extend({
     name: 'Dashboard',
     components: {
       Course,
       Assignment,
+      PersonalSetting,
     },
     props: {
       height: String,

@@ -83,6 +83,22 @@ function login(phone, password) {
     });
 }
 exports.login = login;
+function loginById(id, password) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, index_1.query('SELECT * FROM user WHERE id = ? AND password = ?', [id, password])];
+                case 1:
+                    result = _a.sent();
+                    if (result.length !== 1)
+                        return [2 /*return*/, { success: 0 }];
+                    return [2 /*return*/, { success: 1 }];
+            }
+        });
+    });
+}
+exports.loginById = loginById;
 function register(phone, password) {
     return __awaiter(this, void 0, void 0, function () {
         var result;
@@ -102,4 +118,32 @@ function register(phone, password) {
     });
 }
 exports.register = register;
+function update(id, studentId, nickname, realname, gender) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, index_1.query("\n    UPDATE user\n    SET student_id = ?, nickname = ?, realname = ?, gender = ?\n    WHERE id = ?\n  ", [studentId, nickname, realname, gender, id])];
+                case 1:
+                    result = _a.sent();
+                    return [2 /*return*/, { success: result.affectedRows !== 1 ? 0 : 1 }];
+            }
+        });
+    });
+}
+exports.update = update;
+function updatePassword(id, password) {
+    return __awaiter(this, void 0, void 0, function () {
+        var result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, index_1.query("\n    UPDATE user SET password = ? WHERE id = ?\n  ", [password, id])];
+                case 1:
+                    result = _a.sent();
+                    return [2 /*return*/, { success: result.affectedRows !== 1 ? 0 : 1 }];
+            }
+        });
+    });
+}
+exports.updatePassword = updatePassword;
 //# sourceMappingURL=user.js.map
