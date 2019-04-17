@@ -17,7 +17,7 @@ export default (d: Date, pattern: string) => {
   const date = d.getDate();
   const day = d.getDay();
   const hour = d.getHours();
-  const minute = d.getHours();
+  const minute = d.getMinutes();
   const second = d.getSeconds();
   const table: { [key: string]: string } = {
     YYYY: ensureDigits(year, 4),
