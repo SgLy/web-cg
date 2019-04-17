@@ -16,3 +16,18 @@ export const listByCourse: IMiddleware = async (ctx, next) => {
     await DB.Assignment.listByCourse(ctx.params.courseId),
   );
 };
+
+export const submit: IMiddleware = async (ctx, next) => {
+  if (ctx.request.body.login) {
+    ctx.body = JSON.stringify(
+      await DB.Assignment.submit(
+        ctx.request.body.userId,
+        ctx.request.body.workId,
+        ctx.params.assignmentId,
+        ctx.request.body.timestamp,
+      ),
+    );
+  } else {
+    ctx.body = JSON.stringify({ success: 0 });
+  }
+};

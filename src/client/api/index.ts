@@ -26,6 +26,11 @@ export function createApi() {
   return {
     assignment: {
       listByUser: () => conn.get('/assignment/list'),
+      submit: (assignmentId: number, workId: number, timestamp: number) => {
+        return conn.post(`/assignment/${assignmentId}/submit`, {
+          workId, timestamp,
+        });
+      },
     },
     course: {
       list: (offset: number) => conn.get(`/course/list/${offset}`),

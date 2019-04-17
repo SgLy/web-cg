@@ -136,6 +136,12 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    async submitAssignment({ dispatch }, { workId, assignmentId }: { workId: number, assignmentId: number }) {
+      const timestamp = Math.floor(Date.now() / 1000);
+      const res = await api.assignment.submit(assignmentId, workId, timestamp);
+      dispatch('getAssignmentListByUser');
+      return res.data;
+    },
     async getAssignmentListByUser({ commit }) {
       const res = await api.assignment.listByUser();
       if (res.data.success === 1) {

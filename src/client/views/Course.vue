@@ -1,7 +1,7 @@
 <template>
   <div>
     <ElRow :gutter="20">
-      <ElCol :span="12"
+      <ElCol :span="8"
         v-for="course in courses"
         :key="course.id"
       >
@@ -65,6 +65,9 @@
     },
     computed: {
       ...mapGetters([ 'courses', 'isLogin' ]),
+    },
+    mounted() {
+      document.title = 'Web CG - 课程';
     },
     methods: {
       onClick(course: ICourse) {

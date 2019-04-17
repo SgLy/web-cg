@@ -31,6 +31,11 @@ const routes: IRoute[] = [
   },
   {
     method: 'post',
+    path: '/api/assignment/:assignmentId/submit',
+    controller: Controller.Assignment.submit,
+  },
+  {
+    method: 'post',
     path: '/api/user/login',
     controller: Controller.User.login,
   },

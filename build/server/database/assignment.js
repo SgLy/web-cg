@@ -76,7 +76,7 @@ function submit(userId, workId, assignmentId, timestamp) {
                 case 0: return [4 /*yield*/, index_1.query('DELETE FROM submission WHERE user_id = ? AND assignment_id = ?', [userId, assignmentId])];
                 case 1:
                     _a.sent();
-                    return [4 /*yield*/, index_1.query('INSERT INTO submission (user_id, work_id, assignment_id, submit_time) VALUES (?, ?, FROM_UNIXTIME(?))', [userId, workId, assignmentId, timestamp])];
+                    return [4 /*yield*/, index_1.query('INSERT INTO submission (user_id, work_id, assignment_id, submit_time) VALUES (?, ?, ?, FROM_UNIXTIME(?))', [userId, workId, assignmentId, timestamp])];
                 case 2:
                     result = _a.sent();
                     if (result.affectedRows === 1)

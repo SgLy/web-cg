@@ -74,6 +74,8 @@
       ...mapGetters([ 'workId', 'userId', 'compiledSrc', 'iframeDomain' ]),
     },
     async mounted() {
+      document.title = 'Web CG - 工作区';
+
       const workId = this.$route.params.workId as number;
       if (workId) {
         await this.getWork({ workId });

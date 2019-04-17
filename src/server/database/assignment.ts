@@ -24,7 +24,7 @@ export async function submit(userId: number, workId: number, assignmentId: numbe
     [userId, assignmentId],
   );
   const result = await query(
-    'INSERT INTO submission (user_id, work_id, assignment_id, submit_time) VALUES (?, ?, FROM_UNIXTIME(?))',
+    'INSERT INTO submission (user_id, work_id, assignment_id, submit_time) VALUES (?, ?, ?, FROM_UNIXTIME(?))',
     [userId, workId, assignmentId, timestamp],
   );
   if (result.affectedRows === 1) return { success: 1 };
