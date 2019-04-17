@@ -191,6 +191,10 @@ function jsExtraLib() {
   monaco.languages.typescript.javascriptDefaults.addExtraLib(`
     declare const gl: WebGL2RenderingContext;
     declare const requireGLSL: (filename: string) => string;
+    declare const require: (filename: string) => any;
+    declare const addOnResizeListener: (listener: () => void) => void;
+    declare const addOnKeyPressedListener: (key: string, listener: () => void) => void;
+    declare const addMouseMoveListener: (listener: (movement: { x: number; y: number; }) => void) => void;
   `, 'webcg.d.ts');
 }
 
